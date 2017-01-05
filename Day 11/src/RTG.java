@@ -215,15 +215,16 @@ public class RTG {
 				layout2.get(3).add(new Item("hydrogen", Item.Type.GENERATOR));
 				layout2.get(3).add(new Item("lithium", Item.Type.MICROCHIP));
 				
-				Node node1 = new Node(null, 0, 0,layout1 );
-				Node node2 = new Node(null, 0, 0,layout2 );
+				Node node1 = new Node(null, 0, 0, layout1);
+				Node node2 = new Node(null, 0, 0, layout2);
 				System.out.println(node1.heuristic());
 				System.out.println(node2.heuristic());
 			}
 		}
 	}
 	
-	public static final List<String> input = Input.readAllLines("Day 11/input.txt");
+	public static final List<String> input = Input.readAllLines("Day 11/input.txt"),
+			inputPart2 = Input.readAllLines("Day 11/input part 2.txt");
 	
 	private final List<Set<Item>> initialLayout;
 	
@@ -239,7 +240,7 @@ public class RTG {
 			Set<Item> floor = new HashSet<>();
 			
 			if (!s.contains("nothing")) {
-				s = s.replaceAll("The \\w+ floor contains |a |\\.|-compatible", "").replaceAll(",", " and").replaceAll("and and", "and");
+				s = s.replaceAll("The \\w+ floor contains |a |\\.|-compatible|an ", "").replaceAll(",", " and").replaceAll("and and", "and");
 				String[] item_strings = s.trim().split(" and ");
 				for (String item_string : item_strings) {
 					String[] tokens = item_string.trim().split(" +");
@@ -300,6 +301,14 @@ public class RTG {
 class RunDay11_Part1 {
 	public static void main(String[] args) {
 		RTG rtg = new RTG(RTG.input);
+		rtg.run();
+		System.out.println(rtg.getMinimumSteps());
+	}
+}
+
+class RunDay11_Part2 {
+	public static void main(String[] args) {
+		RTG rtg = new RTG(RTG.inputPart2);
 		rtg.run();
 		System.out.println(rtg.getMinimumSteps());
 	}
