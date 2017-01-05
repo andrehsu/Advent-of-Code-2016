@@ -78,8 +78,8 @@ public class RTG {
 			this.isZerothNode = isZerothNode;
 		}
 		
-		Set<Node> getNextNodes() {
-			Set<Node> nextNodes = new HashSet<>();
+		LinkedList<Node> getNextNodes() {
+			LinkedList<Node> nextNodes = new LinkedList<>();
 			
 			boolean emptySoFar = true;
 			for (int destinationFloor = 0; destinationFloor < 4; destinationFloor++) {
@@ -180,27 +180,9 @@ public class RTG {
 			return false;
 		}
 		
-		static Set<Node> firstNodes(List<Set<Item>> initialLayout) {
+		static LinkedList<Node> firstNodes(List<Set<Item>> initialLayout) {
 			Node zerothNode = new Node(null, 0, 0, initialLayout, true);
 			return zerothNode.getNextNodes();
-		}
-		
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-			
-			Node node = (Node) o;
-			
-			if (elevatorFloor != node.elevatorFloor) return false;
-			return layout.equals(node.layout);
-		}
-		
-		@Override
-		public int hashCode() {
-			int result = elevatorFloor;
-			result = 31 * result + layout.hashCode();
-			return result;
 		}
 		
 		private static class TestHeuristic {
@@ -259,12 +241,12 @@ public class RTG {
 	
 	public void run() {
 		Set<BigInteger> heuristics = new HashSet<>();
-		Set<Node> nodes = Node.firstNodes(initialLayout);
+		LinkedList<Node> nodes = Node.firstNodes(initialLayout);
 		
 		treeDepth:
 		for (int treeDepth = 0; nodes.size() != 0; treeDepth++) {
 			System.out.printf("Depth %d: %d nodes%nTraversedNodes: %d%n%n", treeDepth, nodes.size(), heuristics.size());
-			Set<Node> nextNodes = new HashSet<>();
+			LinkedList<Node> nextNodes = new LinkedList<>();
 			for (Node node : nodes) {
 				if (node.isDone()) {
 					minimumSteps = node.getSteps();
@@ -277,7 +259,7 @@ public class RTG {
 		}
 	}
 	
-	private static void removeDuplicate(Set<Node> nodes, Set<BigInteger> heuristics) {
+	private static void removeDuplicate(LinkedList<Node> nodes, Set<BigInteger> heuristics) {
 		nodes.removeIf(node -> !heuristics.add(node.heuristic()));
 	}
 	
