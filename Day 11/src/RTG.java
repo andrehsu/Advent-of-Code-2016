@@ -6,7 +6,7 @@ import java.util.*;
  * Created by Andre on 1/5/2017.
  */
 public class RTG {
-	private static class Item {
+	private static final class Item {
 		enum Type {
 			MICROCHIP, GENERATOR
 		}
@@ -51,29 +51,55 @@ public class RTG {
 			result = 31 * result + type.hashCode();
 			return result;
 		}
+		
+		static boolean isPair(Item i1, Item i2) {
+			return (i1.type != i2.type) && !i1.element.equals(i2.element);
+		}
 	}
 	
 	private static class Node {
-		private final Node parent;
-		private final int elevatorFloor;
-		private final List<Set<Item>> layout;
-		private final Set<Item> elevator;
+		private enum ElevatorDirection {
+			UP, DOWN
+		}
 		
-		private Node(Node parent, int elevatorFloor, List<Set<Item>> layout, Set<Item> elevator) {
+		private final Node parent;
+		private final int elevatorFloor,
+				steps;
+		private final List<Set<Item>> layout;
+		
+		private final boolean isZerothNode;
+		
+		private Node(Node parent, int elevatorFloor, int steps, List<Set<Item>> layout) {
+			this(parent, elevatorFloor, steps, layout, false);
+		}
+		
+		private Node(Node parent, int elevatorFloor, int steps, List<Set<Item>> layout, boolean isZerothNode) {
 			this.parent = parent;
 			this.elevatorFloor = elevatorFloor;
+			this.steps = steps;
 			this.layout = layout;
-			this.elevator = elevator;
+			this.isZerothNode = isZerothNode;
 		}
 		
 		Set<Node> getNextNodes() {
-			for (int destinationFloor = 0; destinationFloor < 4; destinationFloor++) {
-				if(destinationFloor == elevatorFloor) continue;
-				
+			Set<Node> nextNodes = new HashSet<>();
+			
+			for (ElevatorDirection elevatorDirection : ElevatorDirection.values()) {
 				for (Item item1 : layout.get(elevatorFloor)) {
+					getOutput(elevatorFloor, elevatorDirection, layout, item1).ifPresent(nextNodes::add);
 					
+					for (Item item2 : layout.get(elevatorFloor)) {
+						if (item1.equals(item2)) continue;
+						getOutput(elevatorFloor, elevatorDirection, layout, item1, item2).ifPresent(nextNodes::add);
+					}
 				}
 			}
+			
+			return nextNodes;
+		}
+		
+		int getSteps() {
+			return steps;
 		}
 		
 		boolean isDone() {
@@ -82,8 +108,76 @@ public class RTG {
 					layout.get(2).size() == 0;
 		}
 		
-		static Set<Node> firstNodes(List<Set<Item>> initialLayout) {
+		private Optional<Node> getOutput(int elevatorFloor, ElevatorDirection elevatorDirection, List<Set<Item>> layout, Item... items) {
+			layout = cloneListOfSet(layout);
+			Set<Item> elevator = new HashSet<>();
+			int steps = this.steps;
 			
+			elevator.addAll(Arrays.asList(items));
+			layout.get(elevatorFloor).removeAll(Arrays.asList(items));
+			
+			if (elevatorDirection == ElevatorDirection.UP)
+				elevatorFloor++;
+			else
+				elevatorFloor--;
+			if (elevatorFloor < 0 || elevatorFloor > 3)
+				return Optional.empty();
+			
+			steps++;
+			if (checkBlow(elevatorFloor, layout, elevator) == true) {
+				return Optional.empty();
+			}
+			
+			layout.get(elevatorFloor).addAll(elevator);
+			
+			return Optional.of(new Node(isZerothNode ? null : this, elevatorFloor, steps, layout));
+		}
+		
+		private static boolean checkBlow(int floorNumber, List<Set<Item>> layout, Set<Item> elevator) {
+			Set<Item> floor = new HashSet<>(layout.get(floorNumber));
+			floor.addAll(elevator);
+			
+			items:
+			for (Item item1 : floor) {
+				if (item1.isMicrochip()) {
+					for (Item item2 : floor) {
+						if (!item1.equals(item2) && Item.isPair(item1, item2)) {
+							continue items;
+						}
+					}
+					
+					for (Item item2 : floor) {
+						if (item2.isGenerator() && !Item.isPair(item1, item2)) {
+							return true;
+						}
+					}
+				}
+			}
+			
+			return false;
+		}
+		
+		static Set<Node> firstNodes(List<Set<Item>> initialLayout) {
+			Node zerothNode = new Node(null, 0, 0, initialLayout, true);
+			return zerothNode.getNextNodes();
+		}
+		
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			
+			Node node = (Node) o;
+			
+			if (elevatorFloor != node.elevatorFloor) return false;
+			return layout.equals(node.layout);
+		}
+		
+		@Override
+		public int hashCode() {
+			int result = elevatorFloor;
+			result = 31 * result + layout.hashCode();
+			return result;
 		}
 	}
 	
@@ -116,29 +210,33 @@ public class RTG {
 			
 			initialLayout.add(Collections.unmodifiableSet(floor));
 		}
-		
-		System.out.println();
 	}
 	
 	public void run() {
+		Set<Node> traversedNodes = new HashSet<>();
 		Set<Node> nodes = Node.firstNodes(initialLayout);
-		step:
-		for (int step = 0; step < 1000; step++) {
+		
+		treeDepth:
+		for (int treeDepth = 0; treeDepth < 100; treeDepth++) {
+			System.out.printf("Depth %d: %d nodes%nTraversedNodes: %d%n%n", treeDepth, nodes.size(),traversedNodes.size());
 			Set<Node> nextNodes = new HashSet<>();
 			for (Node node : nodes) {
 				if (node.isDone()) {
-					minimumSteps = step;
-					break step;
-				} else {
+					minimumSteps = node.getSteps();
+					break treeDepth;
+				} else
 					nextNodes.addAll(node.getNextNodes());
-				}
 			}
+			
+				
+			traversedNodes.addAll(nodes);
+			nextNodes.removeAll(traversedNodes);
 			nodes = nextNodes;
 		}
 	}
 	
 	private static <E> List<Set<E>> cloneListOfSet(List<Set<E>> input) {
-		List<Set<E>> output = new ArrayList<>(input.size() + 16);
+		List<Set<E>> output = new ArrayList<>(input.size() );
 		for (Set<E> es : input) {
 			output.add(new HashSet<E>(es));
 		}
@@ -159,5 +257,7 @@ public class RTG {
 class RunDay11_Part1 {
 	public static void main(String[] args) {
 		RTG rtg = new RTG(RTG.input);
+		rtg.run();
+		System.out.println(rtg.getMinimumSteps());
 	}
 }
