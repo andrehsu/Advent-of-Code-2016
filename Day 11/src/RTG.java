@@ -58,10 +58,6 @@ public class RTG {
 	}
 	
 	private static class Node {
-		private enum ElevatorDirection {
-			UP, DOWN
-		}
-		
 		private final Node parent;
 		private final int elevatorFloor,
 				steps;
@@ -84,13 +80,14 @@ public class RTG {
 		Set<Node> getNextNodes() {
 			Set<Node> nextNodes = new HashSet<>();
 			
-			for (ElevatorDirection elevatorDirection : ElevatorDirection.values()) {
+			for (int destinationFloor = 0; destinationFloor < 4; destinationFloor++) {
+				if (destinationFloor == elevatorFloor) continue;
 				for (Item item1 : layout.get(elevatorFloor)) {
-					getOutput(elevatorFloor, elevatorDirection, layout, item1).ifPresent(nextNodes::add);
+					getOutput(elevatorFloor, destinationFloor, layout, item1).ifPresent(nextNodes::add);
 					
 					for (Item item2 : layout.get(elevatorFloor)) {
 						if (item1.equals(item2)) continue;
-						getOutput(elevatorFloor, elevatorDirection, layout, item1, item2).ifPresent(nextNodes::add);
+						getOutput(elevatorFloor, destinationFloor, layout, item1, item2).ifPresent(nextNodes::add);
 					}
 				}
 			}
@@ -108,7 +105,7 @@ public class RTG {
 					layout.get(2).size() == 0;
 		}
 		
-		private Optional<Node> getOutput(int elevatorFloor, ElevatorDirection elevatorDirection, List<Set<Item>> layout, Item... items) {
+		private Optional<Node> getOutput(int elevatorFloor, int destinationFloor, List<Set<Item>> layout, Item... items) {
 			layout = cloneListOfSet(layout);
 			Set<Item> elevator = new HashSet<>();
 			int steps = this.steps;
@@ -116,16 +113,11 @@ public class RTG {
 			elevator.addAll(Arrays.asList(items));
 			layout.get(elevatorFloor).removeAll(Arrays.asList(items));
 			
-			if (elevatorDirection == ElevatorDirection.UP)
-				elevatorFloor++;
-			else
-				elevatorFloor--;
-			if (elevatorFloor < 0 || elevatorFloor > 3)
-				return Optional.empty();
-			
-			steps++;
-			if (checkBlow(elevatorFloor, layout, elevator) == true) {
-				return Optional.empty();
+			for (; elevatorFloor != destinationFloor; elevatorFloor += destinationFloor > elevatorFloor ? 1 : -1) {
+				steps++;
+				if (checkBlow(elevatorFloor, layout, elevator) == true) {
+					return Optional.empty();
+				}
 			}
 			
 			layout.get(elevatorFloor).addAll(elevator);
@@ -218,7 +210,7 @@ public class RTG {
 		
 		treeDepth:
 		for (int treeDepth = 0; treeDepth < 100; treeDepth++) {
-			System.out.printf("Depth %d: %d nodes%nTraversedNodes: %d%n%n", treeDepth, nodes.size(),traversedNodes.size());
+			System.out.printf("Depth %d: %d nodes%nTraversedNodes: %d%n%n", treeDepth, nodes.size(), traversedNodes.size());
 			Set<Node> nextNodes = new HashSet<>();
 			for (Node node : nodes) {
 				if (node.isDone()) {
@@ -228,15 +220,19 @@ public class RTG {
 					nextNodes.addAll(node.getNextNodes());
 			}
 			
-				
+			
 			traversedNodes.addAll(nodes);
 			nextNodes.removeAll(traversedNodes);
 			nodes = nextNodes;
 		}
 	}
 	
+	private static void removeDuplcateNodes(Set<Node> nodes, Set<Node> traversedNodes) {
+		
+	}
+	
 	private static <E> List<Set<E>> cloneListOfSet(List<Set<E>> input) {
-		List<Set<E>> output = new ArrayList<>(input.size() );
+		List<Set<E>> output = new ArrayList<>(input.size());
 		for (Set<E> es : input) {
 			output.add(new HashSet<E>(es));
 		}
