@@ -80,8 +80,14 @@ public class RTG {
 		Set<Node> getNextNodes() {
 			Set<Node> nextNodes = new HashSet<>();
 			
+			boolean emptySoFar = true;
 			for (int destinationFloor = 0; destinationFloor < 4; destinationFloor++) {
+				if (emptySoFar && layout.get(destinationFloor).size() == 0) continue;
+				else
+					emptySoFar = false;
+				
 				if (destinationFloor == elevatorFloor) continue;
+				
 				for (Item item1 : layout.get(elevatorFloor)) {
 					getOutput(elevatorFloor, destinationFloor, layout, item1).ifPresent(nextNodes::add);
 					
