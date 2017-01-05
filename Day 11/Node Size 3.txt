@@ -1,0 +1,53 @@
+Optimization:
+If every floor has the same number of microchips and generators, and that the elevator is at the same floor, treat it as the same state
+
+Depth 0: 28 nodes
+TraversedNodes: 0
+
+Depth 1: 103 nodes
+TraversedNodes: 103
+
+Depth 2: 275 nodes
+TraversedNodes: 378
+
+Depth 3: 542 nodes
+TraversedNodes: 920
+
+Depth 4: 790 nodes
+TraversedNodes: 1710
+
+Depth 5: 975 nodes
+TraversedNodes: 2685
+
+Depth 6: 1104 nodes
+TraversedNodes: 3789
+
+Depth 7: 1170 nodes
+TraversedNodes: 4959
+
+Depth 8: 1185 nodes
+TraversedNodes: 6144
+
+Depth 9: 1225 nodes
+TraversedNodes: 7369
+
+Depth 10: 1049 nodes
+TraversedNodes: 8418
+
+Depth 11: 793 nodes
+TraversedNodes: 9211
+
+Depth 12: 369 nodes
+TraversedNodes: 9580
+
+Depth 13: 318 nodes
+TraversedNodes: 9898
+
+Depth 14: 84 nodes
+TraversedNodes: 9982
+
+Depth 15: 26 nodes
+TraversedNodes: 10008
+
+Depth 16: 2 nodes
+TraversedNodes: 10010

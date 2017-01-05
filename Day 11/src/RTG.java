@@ -1,5 +1,6 @@
 import com.andre.Input;
 
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -111,6 +112,30 @@ public class RTG {
 					layout.get(2).size() == 0;
 		}
 		
+		BigInteger heuristic() {
+			BigInteger heuristic = BigInteger.ONE;
+			
+			Map<Character, String> characterToElementMap = new HashMap<>();
+			
+			for (int floor = 0; floor < 4; floor++) {
+				int microchipCount = 0,
+						generatorCount = 0;
+				for (Item item : layout.get(floor)) {
+					if (item.isGenerator())
+						generatorCount++;
+					else if (item.isMicrochip())
+						microchipCount++;
+				}
+				BigInteger floorValue = BigInteger.valueOf(microchipCount).multiply(BigInteger.valueOf(577)).add(BigInteger.valueOf(generatorCount).multiply(BigInteger.valueOf(2879)));
+				
+				heuristic = heuristic.multiply(BigInteger.valueOf(26953)).add(floorValue);
+			}
+			
+			heuristic = heuristic.multiply(BigInteger.valueOf(269)).add(BigInteger.valueOf(elevatorFloor));
+			
+			return heuristic;
+		}
+		
 		private Optional<Node> getOutput(int elevatorFloor, int destinationFloor, List<Set<Item>> layout, Item... items) {
 			layout = cloneListOfSet(layout);
 			Set<Item> elevator = new HashSet<>();
@@ -177,6 +202,25 @@ public class RTG {
 			result = 31 * result + layout.hashCode();
 			return result;
 		}
+		
+		private static class TestHeuristic {
+			public static void main(String[] args) {
+				List<Set<Item>> layout1 = new ArrayList<>(4);
+				while (layout1.size() < 4) layout1.add(new HashSet<>());
+				layout1.get(3).add(new Item("lithium", Item.Type.GENERATOR));
+				layout1.get(3).add(new Item("hydrogen", Item.Type.MICROCHIP));
+				
+				List<Set<Item>> layout2 = new ArrayList<>(4);
+				while (layout2.size() < 4) layout2.add(new HashSet<>());
+				layout2.get(3).add(new Item("hydrogen", Item.Type.GENERATOR));
+				layout2.get(3).add(new Item("lithium", Item.Type.MICROCHIP));
+				
+				Node node1 = new Node(null, 0, 0,layout1 );
+				Node node2 = new Node(null, 0, 0,layout2 );
+				System.out.println(node1.heuristic());
+				System.out.println(node2.heuristic());
+			}
+		}
 	}
 	
 	public static final List<String> input = Input.readAllLines("Day 11/input.txt");
@@ -211,11 +255,11 @@ public class RTG {
 	}
 	
 	public void run() {
-		Set<Node> traversedNodes = new HashSet<>();
+		Set<BigInteger> traversedNodes = new HashSet<>();
 		Set<Node> nodes = Node.firstNodes(initialLayout);
 		
 		treeDepth:
-		for (int treeDepth = 0; treeDepth < 100; treeDepth++) {
+		for (int treeDepth = 0; nodes.size() != 0; treeDepth++) {
 			System.out.printf("Depth %d: %d nodes%nTraversedNodes: %d%n%n", treeDepth, nodes.size(), traversedNodes.size());
 			Set<Node> nextNodes = new HashSet<>();
 			for (Node node : nodes) {
@@ -225,16 +269,13 @@ public class RTG {
 				} else
 					nextNodes.addAll(node.getNextNodes());
 			}
-			
-			
-			traversedNodes.addAll(nodes);
-			nextNodes.removeAll(traversedNodes);
+			removeDuplicate(nextNodes, traversedNodes);
 			nodes = nextNodes;
 		}
 	}
 	
-	private static void removeDuplcateNodes(Set<Node> nodes, Set<Node> traversedNodes) {
-		
+	private static void removeDuplicate(Set<Node> nodes, Set<BigInteger> heuristics) {
+		nodes.removeIf(node -> !heuristics.add(node.heuristic()));
 	}
 	
 	private static <E> List<Set<E>> cloneListOfSet(List<Set<E>> input) {
