@@ -146,7 +146,7 @@ public class RTG {
 			
 			for (; elevatorFloor != destinationFloor; elevatorFloor += destinationFloor > elevatorFloor ? 1 : -1) {
 				steps++;
-				if (checkBlow(elevatorFloor, layout, elevator) == true) {
+				if (checkForBlownChip(elevatorFloor, layout, elevator) == true) {
 					return Optional.empty();
 				}
 			}
@@ -156,7 +156,7 @@ public class RTG {
 			return Optional.of(new Node(isZerothNode ? null : this, elevatorFloor, steps, layout));
 		}
 		
-		private static boolean checkBlow(int floorNumber, List<Set<Item>> layout, Set<Item> elevator) {
+		private static boolean checkForBlownChip(int floorNumber, List<Set<Item>> layout, Set<Item> elevator) {
 			Set<Item> floor = new HashSet<>(layout.get(floorNumber));
 			floor.addAll(elevator);
 			
@@ -220,6 +220,8 @@ public class RTG {
 				System.out.println(node1.heuristic());
 				System.out.println(node2.heuristic());
 			}
+			
+			
 		}
 	}
 	
@@ -256,12 +258,12 @@ public class RTG {
 	}
 	
 	public void run() {
-		Set<BigInteger> traversedNodes = new HashSet<>();
+		Set<BigInteger> heuristics = new HashSet<>();
 		Set<Node> nodes = Node.firstNodes(initialLayout);
 		
 		treeDepth:
 		for (int treeDepth = 0; nodes.size() != 0; treeDepth++) {
-			System.out.printf("Depth %d: %d nodes%nTraversedNodes: %d%n%n", treeDepth, nodes.size(), traversedNodes.size());
+			System.out.printf("Depth %d: %d nodes%nTraversedNodes: %d%n%n", treeDepth, nodes.size(), heuristics.size());
 			Set<Node> nextNodes = new HashSet<>();
 			for (Node node : nodes) {
 				if (node.isDone()) {
@@ -270,7 +272,7 @@ public class RTG {
 				} else
 					nextNodes.addAll(node.getNextNodes());
 			}
-			removeDuplicate(nextNodes, traversedNodes);
+			removeDuplicate(nextNodes, heuristics);
 			nodes = nextNodes;
 		}
 	}
