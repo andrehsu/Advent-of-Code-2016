@@ -1,0 +1,26 @@
+Optimization:
+If bottom floor are empty don't move them down
+
+Depth 0: 28 nodes
+TraversedNodes: 0
+
+Depth 1: 675 nodes
+TraversedNodes: 28
+
+Depth 2: 6583 nodes
+TraversedNodes: 703
+
+Depth 3: 40431 nodes
+TraversedNodes: 7286
+
+Depth 4: 159809 nodes
+TraversedNodes: 47717
+
+Depth 5: 358284 nodes
+TraversedNodes: 207526
+
+Depth 6: 546424 nodes
+TraversedNodes: 565810
+
+Depth 7: 629832 nodes
+TraversedNodes: 1112234
