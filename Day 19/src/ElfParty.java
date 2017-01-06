@@ -1,3 +1,4 @@
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -21,27 +22,27 @@ public class ElfParty {
 		if (positions < 1) return -1;
 		
 		
-		LinkedList<Integer> left = new LinkedList<>(),
+		Deque<Integer> left = new LinkedList<>(),
 				right = new LinkedList<>();
 		for (int i = 1; i <= positions; i++) {
 			if (i < positions / 2 + 1)
-				left.addLast(i);
+				left.addFirst(i);
 			else
-				right.addFirst(i);
+				right.addLast(i);
 		}
 		
 		while (left.size() > 0 && right.size() > 0) {
 			// Remove opposite
 			if (left.size() > right.size())
-				left.pollLast();
+				left.pollFirst();
 			else
-				right.pollLast();
+				right.pollFirst();
 			
 			// Rotate
-			right.addFirst(left.pollFirst());
-			left.addLast(right.pollLast());
+			right.addLast(left.pollLast());
+			left.addFirst(right.pollFirst());
 		}
-		return left.size() == 1 ? left.get(0) : right.get(0);
+		return left.size() == 1 ? left.pollFirst() : right.pollFirst();
 	}
 	
 	private static final class Test {
