@@ -126,12 +126,12 @@ public class RTG {
 					else if (item.isMicrochip())
 						microchipCount++;
 				}
-				BigInteger floorValue = BigInteger.valueOf(microchipCount).multiply(BigInteger.valueOf(577)).add(BigInteger.valueOf(generatorCount).multiply(BigInteger.valueOf(2879)));
+				BigInteger floorValue = BigInteger.valueOf(microchipCount).multiply(BigInteger.valueOf(31)).add(BigInteger.valueOf(generatorCount).multiply(BigInteger.valueOf(41)));
 				
-				heuristic = heuristic.multiply(BigInteger.valueOf(26953)).add(floorValue);
+				heuristic = heuristic.multiply(BigInteger.valueOf(47)).add(floorValue);
 			}
 			
-			heuristic = heuristic.multiply(BigInteger.valueOf(269)).add(BigInteger.valueOf(elevatorFloor));
+			heuristic = heuristic.multiply(BigInteger.valueOf(59)).add(BigInteger.valueOf(elevatorFloor));
 			
 			return heuristic;
 		}
