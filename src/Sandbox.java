@@ -5,6 +5,6 @@ import java.math.BigInteger;
  */
 public class Sandbox {
 	public static void main(String[] args){
-		System.out.println(BigInteger.ZERO.equals("asdf"));
+		System.out.println("DRURDRUDDLLDLUURRDULRLDUUDDDRR".length());
 	}
 }
