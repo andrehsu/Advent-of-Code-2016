@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -7,16 +8,19 @@ import java.util.Scanner;
  */
 public class Primes {
 	public static void main(String[] args) {
-		System.out.println("Size?");
-		int size = new Scanner(System.in).nextInt();
-		List<Integer> list = new ArrayList<>(size);
-		for (int i = 2; i < size; i++) {
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("From?");
+		int from = scanner.nextInt();
+		System.out.println("To?");
+		int to = scanner.nextInt();
+		List<Integer> list = new LinkedList<>();
+		for (int i = from < 2 ? 2 : from; i <= to; i++) {
 			list.add(i);
 		}
 		
-		int sqrt = (int) Math.sqrt(size);
+		int sqrt = (int) Math.sqrt(to);
 		for (int i = 2; i <= sqrt; i++) {
-			for (int j = i+i; j < list.size(); j += i) {
+			for (int j = i + i; j <= to; j += i) {
 				list.remove((Integer) j);
 			}
 		}
