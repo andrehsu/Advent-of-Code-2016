@@ -59,6 +59,8 @@ public class RTG {
 	}
 	
 	private static class Node {
+		private static final BigInteger PRIME = BigInteger.valueOf(7);
+		
 		private final Node parent;
 		private final int elevatorFloor,
 				steps;
@@ -114,9 +116,6 @@ public class RTG {
 		
 		BigInteger heuristic() {
 			BigInteger heuristic = BigInteger.ONE;
-			
-			Map<Character, String> characterToElementMap = new HashMap<>();
-			
 			for (int floor = 0; floor < 4; floor++) {
 				int microchipCount = 0,
 						generatorCount = 0;
@@ -126,12 +125,12 @@ public class RTG {
 					else if (item.isMicrochip())
 						microchipCount++;
 				}
-				BigInteger floorValue = BigInteger.valueOf(microchipCount).multiply(BigInteger.valueOf(31)).add(BigInteger.valueOf(generatorCount).multiply(BigInteger.valueOf(41)));
+				BigInteger floorValue = BigInteger.valueOf(microchipCount).multiply(PRIME).add(BigInteger.valueOf(generatorCount));
 				
-				heuristic = heuristic.multiply(BigInteger.valueOf(47)).add(floorValue);
+				heuristic = heuristic.multiply(PRIME).add(floorValue);
 			}
 			
-			heuristic = heuristic.multiply(BigInteger.valueOf(59)).add(BigInteger.valueOf(elevatorFloor));
+			heuristic = heuristic.multiply(PRIME).add(BigInteger.valueOf(elevatorFloor));
 			
 			return heuristic;
 		}
