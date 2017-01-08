@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Advent of Code 2016" />
+    <orderEntry type="library" name="com.google.guava:guava:20.0" level="project" />
   </component>
 </module>

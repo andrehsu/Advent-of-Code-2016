@@ -1,4 +1,6 @@
 import com.andre.Input;
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
 
 import java.util.HashSet;
 import java.util.List;
@@ -50,22 +52,22 @@ public class PasswordScrambler {
 	}
 	
 	private static Set<String> permutations(String string) {
-		Set<Character> letters = new HashSet<>();
+		Multiset<Character> letters = HashMultiset.create();
 		for (int i = 0; i < string.length(); i++) {
 			letters.add(string.charAt(i));
 		}
 		
 		Set<String> output = new HashSet<>();
-		permutations_node(output, "", new HashSet<>(letters));
+		permutations_node(output, "", letters);
 		return output;
 	}
 	
-	private static void permutations_node(Set<String> output, String soFar, Set<Character> remaining) {
+	private static void permutations_node(Set<String> output, String soFar, Multiset<Character> remaining) {
 		if (remaining.size() == 0) {
 			output.add(soFar);
 		} else {
 			for (Character character : remaining) {
-				Set<Character> nextRemaining = new HashSet<>(remaining);
+				Multiset<Character> nextRemaining = HashMultiset.create(remaining);
 				nextRemaining.remove(character);
 				permutations_node(output, soFar + character, nextRemaining);
 			}
