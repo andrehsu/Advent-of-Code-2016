@@ -1,7 +1,8 @@
 import com.andre.Input;
 
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Andre on 1/7/2017.
@@ -38,33 +39,37 @@ public class PasswordScrambler {
 	}
 	
 	public static String unscramble(String string, List<String> instructions) {
-		LinkedList<String> reversed = new LinkedList<>();
-		instructions.forEach(s -> reversed.addFirst(s));
-		CharSequence cs = string;
-		
-		for (String instruction : reversed) {
-			String[] tokens = instruction.trim().split(" ");
-			
-			if (instruction.matches("swap position .+ with position .+")) {
-				cs = swapPosition(cs, Integer.parseInt(tokens[5]), Integer.parseInt(tokens[2]));
-			} else if (instruction.matches("swap letter .+ with letter .+")) {
-				cs = swapLetter(cs, tokens[2].charAt(0), tokens[5].charAt(0));
-			} else if (instruction.matches("rotate right .+ step(s)?")) {
-				cs = rotate(cs, -Integer.parseInt(tokens[2]));
-			} else if (instruction.matches("rotate left .+ step(s)?")) {
-				cs = rotate(cs, Integer.parseInt(tokens[2]));
-			} else if (instruction.matches("rotate based on position of letter .+")) {
-				cs = reverseRotate(cs, tokens[6].charAt(0));
-			} else if (instruction.matches("reverse positions .+ through .+"))
-				cs = reverse(cs, Integer.parseInt(tokens[2]), Integer.parseInt(tokens[4]));
-			else if (instruction.matches("move position .+ to position .+"))
-				cs = move(cs, Integer.parseInt(tokens[5]), Integer.parseInt(tokens[2]));
-			else {
-				throw new RuntimeException("Invalid syntax encountered");
+		Set<String> strings = permutations(string);
+		for (String s : strings) {
+			if (scramble(s, instructions).equals(string)) {
+				return s;
 			}
 		}
 		
-		return cs.toString();
+		return "None found";
+	}
+	
+	private static Set<String> permutations(String string) {
+		Set<Character> letters = new HashSet<>();
+		for (int i = 0; i < string.length(); i++) {
+			letters.add(string.charAt(i));
+		}
+		
+		Set<String> output = new HashSet<>();
+		permutations_node(output, "", new HashSet<>(letters));
+		return output;
+	}
+	
+	private static void permutations_node(Set<String> output, String soFar, Set<Character> remaining) {
+		if (remaining.size() == 0) {
+			output.add(soFar);
+		} else {
+			for (Character character : remaining) {
+				Set<Character> nextRemaining = new HashSet<>(remaining);
+				nextRemaining.remove(character);
+				permutations_node(output, soFar + character, nextRemaining);
+			}
+		}
 	}
 	
 	private static CharSequence swapPosition(CharSequence cs, int position1, int position2) {
@@ -99,14 +104,6 @@ public class PasswordScrambler {
 		return rotate(cs, offset);
 	}
 	
-	private static CharSequence reverseRotate(CharSequence cs, char basedOn) {
-		int offset = cs.toString().indexOf(basedOn);
-		if (offset >= 4) offset++;
-		offset++;
-		
-		return rotate(cs, -offset);
-	}
-	
 	private static CharSequence reverse(CharSequence cs, int from, int to) {
 		CharSequence subSequence = cs.subSequence(from, to + 1);
 		
@@ -131,7 +128,7 @@ public class PasswordScrambler {
 		
 		public static void main(String[] args) {
 			System.out.println(scramble("abcde", testInput));
-			System.out.println(unscramble("dgfaehcb",input));
+			System.out.println(unscramble("dgfaehcb", input));
 		}
 	}
 }
@@ -142,8 +139,8 @@ class RunDay21_Part1 {
 	}
 }
 
-class RunDay21_Part2{
-	public static void main(String[] args){
-		System.out.println(PasswordScrambler.unscramble("fbgdceah",PasswordScrambler.input));
+class RunDay21_Part2 {
+	public static void main(String[] args) {
+		System.out.println(PasswordScrambler.unscramble("fbgdceah", PasswordScrambler.input));
 	}
 }
