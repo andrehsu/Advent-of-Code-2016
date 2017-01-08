@@ -38,7 +38,7 @@ public class PasswordScrambler {
 		return cs.toString();
 	}
 	
-	public static String unscramble(String string, List<String> instructions) {
+	public static String bruteForceUnscramble(String string, List<String> instructions) {
 		Set<String> strings = permutations(string);
 		for (String s : strings) {
 			if (scramble(s, instructions).equals(string)) {
@@ -128,7 +128,7 @@ public class PasswordScrambler {
 		
 		public static void main(String[] args) {
 			System.out.println(scramble("abcde", testInput));
-			System.out.println(unscramble("dgfaehcb", input));
+			System.out.println(bruteForceUnscramble("dgfaehcb", input));
 		}
 	}
 }
@@ -141,6 +141,6 @@ class RunDay21_Part1 {
 
 class RunDay21_Part2 {
 	public static void main(String[] args) {
-		System.out.println(PasswordScrambler.unscramble("fbgdceah", PasswordScrambler.input));
+		System.out.println(PasswordScrambler.bruteForceUnscramble("fbgdceah", PasswordScrambler.input));
 	}
 }
