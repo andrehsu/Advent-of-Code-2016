@@ -1,6 +1,7 @@
 import com.andre.Input;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import com.sun.istack.internal.NotNull;
 
 import java.util.List;
 
@@ -117,8 +118,12 @@ public class StorageMatrix {
 		return count;
 	}
 	
-	private static boolean viablePair(Disk diskA, Disk diskB) {
-		return diskA != null && diskB != null && diskA.getUsed() != 0 && diskB.getAvailable() - diskA.getUsed() >= 0 && diskA != diskB;
+	private static boolean viablePair(@NotNull Disk diskA, @NotNull Disk diskB) {
+		return diskA != null &&
+				diskB != null &&
+				diskA != diskB &&
+				diskA.getUsed() != 0 &&
+				diskB.getAvailable() - diskA.getUsed() >= 0;
 	}
 	
 	private static class Test {
