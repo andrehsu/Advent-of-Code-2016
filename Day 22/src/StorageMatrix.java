@@ -118,7 +118,7 @@ public class StorageMatrix {
 	}
 	
 	private static boolean viablePair(Disk diskA, Disk diskB) {
-		return diskA.getUsed() != 0 && !diskA.equals(diskB) && diskB.getAvailable() - diskA.getUsed() >= 0;
+		return diskA != null && diskB != null && diskA.getUsed() != 0 && diskB.getAvailable() - diskA.getUsed() >= 0 && diskA != diskB;
 	}
 	
 	private static class Test {
