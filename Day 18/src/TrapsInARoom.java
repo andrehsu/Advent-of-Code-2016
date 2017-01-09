@@ -89,8 +89,9 @@ public class TrapsInARoom {
 		private static final String testInput = ".^^.^.^^^^";
 		
 		public static void main(String[] args) {
-			printFloor(generateFloor(testInput, 10));
-			System.out.println(countSafe(generateFloor(testInput, 10)));
+			List<List<Tile>> floor = generateFloor(testInput, 10);
+			printFloor(floor);
+			System.out.println(countSafe(floor));
 		}
 	}
 }
