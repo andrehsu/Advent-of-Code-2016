@@ -41,25 +41,22 @@ public class DecoyData {
 		List<Entry<Character, Integer>> occurrenceCount = new ArrayList<>(countCharOccurrence(key[0]).entrySet());
 		StringBuilder topFive = new StringBuilder();
 		for (int i = 0; i < 5; i++) topFive.append(occurrenceCount.get(i).getKey());
-		if (key[2].equals(topFive.toString())) return true;
-		else return false;
+		return key[2].equals(topFive.toString());
 	}
 	
 	private static Map<Character, Integer> countCharOccurrence(String string) {
+		// Count
 		Map<Character, Integer> occurrenceCount = new HashMap<>();
 		StringBuilder sb = new StringBuilder(string);
 		for (int i = 0; i < sb.length(); i++) {
-			char c = sb.charAt(i);
-			occurrenceCount.put(c, occurrenceCount.get(c) == null ? 1 : occurrenceCount.get(c) + 1);
+			occurrenceCount.merge(sb.charAt(i), 1, Integer::sum);
 		}
+		
+		// Sort
 		List<Entry<Character, Integer>> sortedList = new LinkedList<>(occurrenceCount.entrySet());
-		Collections.sort(sortedList, new Comparator<Entry<Character, Integer>>() {
-			@Override
-			public int compare(Entry<Character, Integer> o1, Entry<Character, Integer> o2) {
-				int valueCompareResult = Integer.compare(o2.getValue(), o1.getValue());
-				if (valueCompareResult == 0) return Integer.compare(o1.getKey(), o2.getKey());
-				else return valueCompareResult;
-			}
+		Collections.sort(sortedList, (o1, o2) -> {
+			int valueCompareResult = Integer.compare(o2.getValue(), o1.getValue());
+			return valueCompareResult == 0 ? Integer.compare(o1.getKey(), o2.getKey()) : valueCompareResult;
 		});
 		Map<Character, Integer> sortedOccurrenceMap = new LinkedHashMap<>();
 		for (Entry<Character, Integer> entry : sortedList) sortedOccurrenceMap.put(entry.getKey(), entry.getValue());
@@ -74,12 +71,9 @@ public class DecoyData {
 			if (character == '[') split2 = i;
 			if (character == '-') split1 = i;
 		}
-		output[0] = key.substring(0, split1);
+		output[0] = key.substring(0, split1).replaceAll("-", "");
 		output[1] = key.substring(split1 + 1, split2);
 		output[2] = key.substring(split2 + 1, key.length() - 1);
-		StringBuilder sb = new StringBuilder(output[0]);
-		for (int i = 0; i < sb.length(); i++) if (sb.charAt(i) == '-') sb.deleteCharAt(i);
-		output[0] = sb.toString();
 		return output;
 	}
 	
