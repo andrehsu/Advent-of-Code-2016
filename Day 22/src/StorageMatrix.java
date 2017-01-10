@@ -1,9 +1,9 @@
 import com.andre.Input;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import com.sun.istack.internal.NotNull;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Andre on 1/8/2017.
@@ -21,9 +21,7 @@ public class StorageMatrix {
 			String tokens[] = dfLine.replaceAll("-y", " ").replaceAll("\\/dev\\/grid\\/node-x|T|%", "").trim().split("\\s+");
 			
 			int[] ints = new int[tokens.length];
-			for (int i = 0; i < tokens.length; i++) {
-				ints[i] = Integer.parseInt(tokens[i]);
-			}
+			for (int i = 0; i < tokens.length; i++) ints[i] = Integer.parseInt(tokens[i]);
 			
 			int x = ints[0],
 					y = ints[1],
@@ -97,44 +95,83 @@ public class StorageMatrix {
 	
 	public static final List<String> input = Input.readAllLines("Day 22/input.txt");
 	
-	public static int viablePairs(List<String> df) {
-		// remove header
-		df.subList(0, 2).clear();
-		
+	
+	public static int minimumSteps(Table<Integer, Integer, Disk> diskTable) {
+		return -1;
+	}
+	
+	public static void printTable(Table<Integer, Integer, Disk> diskTable) {
+		for (Map<Integer, Disk> column : diskTable.rowMap().values()) {
+			for (Disk disk : column.values()) {
+				if (disk.getY() == 0 && disk.getX() == diskTable.columnKeySet().size() - 1) {
+					System.out.printf("%s ", 'G');
+				} else {
+					int viablePairCount = 0;
+					for (Disk diskA : diskTable.values()) {
+						if (isViablePair(diskA, disk)) viablePairCount++;
+					}
+					
+					if (viablePairCount == 0) {
+						System.out.printf("%s ", '#');
+					} else if (viablePairCount == diskTable.size() - 1) {
+						System.out.printf("%s ", '_');
+					} else {
+						System.out.printf("%s ", '.');
+					}
+				}
+			}
+			System.out.println();
+		}
+	}
+	
+	public static Table<Integer, Integer, Disk> generateDiskTable(List<String> df) {
 		Table<Integer, Integer, Disk> diskTable = HashBasedTable.create();
 		
 		for (String s : df) {
+			if (!s.matches("\\/dev\\/grid\\/node-x\\d+-y\\d+ +\\d+T +\\d+T +\\d+T +\\d+%")) continue;
 			Disk disk = Disk.create(s);
-			diskTable.put(disk.getX(), disk.getY(), disk);
+			diskTable.put(disk.getY(), disk.getX(), disk);
 		}
 		
+		return diskTable;
+	}
+	
+	public static int countViablePairs(Table<Integer, Integer, Disk> diskTable) {
 		int count = 0;
 		for (Disk diskA : diskTable.values()) {
-			for (Disk diskB : diskTable.values()) {
-				if (viablePair(diskA, diskB)) count++;
-			}
+			count += countViablePairsWith(diskA, diskTable);
 		}
 		
 		return count;
 	}
 	
-	private static boolean viablePair(@NotNull Disk diskA, @NotNull Disk diskB) {
-		return diskA != null &&
-				diskB != null &&
-				diskA != diskB &&
+	private static int countViablePairsWith(Disk diskA, Table<Integer, Integer, Disk> diskTable) {
+		int count = 0;
+		for (Disk diskB : diskTable.values()) {
+			if (isViablePair(diskA, diskB)) count++;
+		}
+		return count;
+	}
+	
+	private static boolean isViablePair(Disk diskA, Disk diskB) {
+		return diskA != diskB &&
 				diskA.getUsed() != 0 &&
 				diskB.getAvailable() - diskA.getUsed() >= 0;
 	}
 	
 	private static class Test {
+		private static final List<String> testInput = Input.readAllLines("Day 22/test input.txt");
+		
 		public static void main(String[] args) {
-			
+			printTable(generateDiskTable(testInput));
+			System.out.println();
+			printTable(generateDiskTable(input));
 		}
 	}
 }
 
 class RunDay22Part1 {
 	public static void main(String[] args) {
-		System.out.println(StorageMatrix.viablePairs(StorageMatrix.input));
+		System.out.println(StorageMatrix.countViablePairs(StorageMatrix.generateDiskTable(StorageMatrix.input)));
 	}
 }
