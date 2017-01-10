@@ -1,6 +1,8 @@
-import com.andre.Input;
+import andre.adventofcode.input.Input;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Andre on 1/6/2017.

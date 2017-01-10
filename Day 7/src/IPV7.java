@@ -1,4 +1,4 @@
-import com.andre.Input;
+import andre.adventofcode.input.Input;
 import javafx.util.Pair;
 
 import java.util.*;

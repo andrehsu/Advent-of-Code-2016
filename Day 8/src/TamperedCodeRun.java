@@ -1,4 +1,4 @@
-import com.andre.Input;
+import andre.adventofcode.input.Input;
 
 /**
  * Created by andre on 12/11/2016.

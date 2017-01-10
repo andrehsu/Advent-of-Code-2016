@@ -1,7 +1,6 @@
-import com.andre.Input;
+import andre.adventofcode.input.Input;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

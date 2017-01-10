@@ -1,4 +1,4 @@
-import com.andre.Input;
+import andre.adventofcode.input.Input;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 

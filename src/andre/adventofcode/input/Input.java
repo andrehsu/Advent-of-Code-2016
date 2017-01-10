@@ -1,4 +1,4 @@
-package com.andre;
+package andre.adventofcode.input;
 
 import java.io.IOException;
 import java.nio.file.Files;

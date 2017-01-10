@@ -1,4 +1,4 @@
-import com.andre.Input;
+import andre.adventofcode.input.Input;
 
 import java.util.HashMap;
 import java.util.List;
