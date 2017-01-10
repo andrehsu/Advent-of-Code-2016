@@ -7,7 +7,6 @@ import java.util.List;
 
 public class Input {
 	public static List<String> readAllLines(String fileURL) {
-		
 		try {
 			return Files.readAllLines(Paths.get(fileURL));
 		} catch (IOException e) {
