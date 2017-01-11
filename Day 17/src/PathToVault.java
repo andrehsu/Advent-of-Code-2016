@@ -1,11 +1,7 @@
 import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
+import java.util.*;
 
 /**
  * Created by Andre on 1/5/2017.
@@ -125,7 +121,7 @@ public class PathToVault {
 			nodes = nextNodes;
 		}
 		
-		return "No solution";
+		return "-1";
 	}
 	
 	public static String longestPath(String seed) {
@@ -137,7 +133,8 @@ public class PathToVault {
 			Set<Node> nextNodes = new HashSet<>();
 			
 			for (Node node : nodes) {
-				if (node.isDone()) paths.put(node, steps);
+				if (node.isDone())
+					paths.put(node, steps);
 				else
 					nextNodes.addAll(node.getNextNodes());
 			}
@@ -145,22 +142,13 @@ public class PathToVault {
 			nodes = nextNodes;
 		}
 		
-		Function<Map<Node, Integer>, Node> max = nodeIntegerMap -> {
-			Map.Entry<Node, Integer> maxEntry = nodeIntegerMap.entrySet().iterator().next();
-			for (Map.Entry<Node, Integer> entry : nodeIntegerMap.entrySet()) {
-				if (entry.getValue() > maxEntry.getValue()) {
-					maxEntry = entry;
-				}
-			}
-			return maxEntry.getKey();
-		};
-		
-		return max.apply(paths).toString();
+		Optional<Map.Entry<Node, Integer>> entryOptional = paths.entrySet().parallelStream().max(Comparator.comparingInt(Map.Entry::getValue));
+		return entryOptional.isPresent() ? entryOptional.get().getKey().toString() : "-1";
 	}
 	
 	private static class Test {
 		public static void main(String[] args) {
-			assert shortestPath("hijkl").equals("No solution");
+			assert shortestPath("hijkl").equals("-1");
 			assert shortestPath("ihgpwlah").equals("DDRRRD");
 			assert shortestPath("kglvqrro").equals("DDUDRLRRUDRD");
 			assert shortestPath("ulqzkmiv").equals("DRURDRUDDLLDLUURRDULRLDUUDDDRR");
