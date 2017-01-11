@@ -1,6 +1,5 @@
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import andre.adventofcode.input.Input;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,8 +7,8 @@ import java.util.List;
  * Created by Andre on 12/5/2016.
  */
 public class Triangle {
-	public static void main(String[] args) throws IOException {
-		List<String> file = Files.readAllLines(Paths.get("Day 3/input.txt"));
+	public static void main(String[] args) {
+		List<String> file = Input.readAllLines("Day 3/input.txt");
 		
 		List<int[]> sets1 = new ArrayList<>();
 		for (String line : file) {
@@ -46,11 +45,5 @@ public class Triangle {
 			}
 		}
 		return validTriangleCount;
-	}
-	
-	private static class Test {
-		public static void main(String[] args) {
-			System.out.println(validateTriangle(5, 10, 25));
-		}
 	}
 }
