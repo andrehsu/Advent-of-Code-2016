@@ -3,6 +3,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.IntStream;
+
+import static java.lang.System.currentTimeMillis;
 
 /**
  * Created by Andre on 1/4/2017.
@@ -48,43 +53,56 @@ public class KeyGen {
 		return -1;
 	}
 	
-	public static List<String> generateMD5Hashes(String seed) {
-		MessageDigest md5;
+	private static String MD5HashOf(String seed, int i) {
+		MessageDigest MD5;
 		try {
-			md5 = MessageDigest.getInstance("MD5");
+			MD5 = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
 		}
 		
-		List<String> hashes = new ArrayList<>(hashSize);
-		for (int i = 0; i < hashSize; i++) {
-			hashes.add(DatatypeConverter.printHexBinary(md5.digest((seed + String.valueOf(i)).getBytes())));
-		}
+		return DatatypeConverter.printHexBinary(MD5.digest((seed + i).getBytes()));
+	}
+	
+	public static List<String> generateMD5Hashes(String seed) {
+		Map<Integer, String> hashes = new ConcurrentHashMap<>();
+		
+		long start = currentTimeMillis();
+		IntStream.range(0, hashSize).parallel().forEach(value -> hashes.put(value, MD5HashOf(seed, value)));
+		System.out.println(currentTimeMillis() - start);
 		
 		System.out.println("Done generating hashes");
-		return hashes;
+		List<String> hashList = new ArrayList<>(hashSize);
+		IntStream.range(0, hashSize).forEach(value -> hashList.add(hashes.get(value)));
+		return hashList;
 	}
 	
 	public static List<String> generateStretchedMD5Hashes(String seed) {
-		MessageDigest md5;
+		Map<Integer, String> hashes = new ConcurrentHashMap<>();
+		
+		// Before parallel stream optimization: 38430 ms, now: 14607 ms
+		IntStream.range(0, hashSize).parallel().forEach(value -> hashes.put(value, stretchedMD5HashOf(seed, value)));
+		
+		System.out.println("Done generating stretched hashes");
+		List<String> hashList = new ArrayList<>(hashSize);
+		IntStream.range(0, hashSize).forEach(value -> hashList.add(hashes.get(value)));
+		return hashList;
+	}
+	
+	private static String stretchedMD5HashOf(String seed, int i) {
+		MessageDigest MD5;
 		try {
-			md5 = MessageDigest.getInstance("MD5");
+			MD5 = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
 		}
 		
-		List<String> hashes = new ArrayList<>(hashSize);
 		String hash;
-		for (int i = 0; i < hashSize; i++) {
-			hash = DatatypeConverter.printHexBinary(md5.digest((seed + String.valueOf(i)).getBytes())).toLowerCase();
-			for (int repetition = 0; repetition < 2016; repetition++) {
-				hash = DatatypeConverter.printHexBinary(md5.digest(hash.getBytes())).toLowerCase();
-			}
-			hashes.add(hash);
+		hash = DatatypeConverter.printHexBinary(MD5.digest((seed + i).getBytes())).toLowerCase();
+		for (int repetition = 0; repetition < 2016; repetition++) {
+			hash = DatatypeConverter.printHexBinary(MD5.digest(hash.getBytes())).toLowerCase();
 		}
-		
-		System.out.println("Done generating stretched hashes");
-		return hashes;
+		return hash;
 	}
 	
 	private static class Test {
@@ -97,12 +115,16 @@ public class KeyGen {
 
 class RunDay14_Part1 {
 	public static void main(String[] args) {
+		long start = currentTimeMillis();
 		System.out.println(KeyGen.indexOf64thKey(KeyGen.generateMD5Hashes(KeyGen.input)));
+		System.out.println(currentTimeMillis() - start);
 	}
 }
 
 class RunDay14_Part2 {
 	public static void main(String[] args) {
+		long start = currentTimeMillis();
 		System.out.println(KeyGen.indexOf64thKey(KeyGen.generateStretchedMD5Hashes(KeyGen.input)));
+		System.out.println(currentTimeMillis() - start);
 	}
 }
