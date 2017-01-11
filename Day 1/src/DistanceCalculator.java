@@ -1,8 +1,11 @@
+import andre.adventofcode.input.Input;
+
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
 public class DistanceCalculator {
+	public static final String input = Input.readFirstLine("Day 1/input.txt");
 	public static final Point startingPoint = new Point(0, 0);
 	
 	private final String[] sequence;
@@ -108,5 +111,14 @@ public class DistanceCalculator {
 					throw new RuntimeException();
 			}
 		}
+	}
+}
+
+class RunDay1 {
+	public static void main(String[] args) {
+		DistanceCalculator distanceCalculator = new DistanceCalculator(DistanceCalculator.input);
+		distanceCalculator.run();
+		System.out.println(distanceCalculator.getDistanceOfEndPoint());
+		System.out.println(distanceCalculator.getDistanceOfRepeatedPoint());
 	}
 }
