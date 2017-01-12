@@ -67,9 +67,7 @@ public class KeyGen {
 	public static List<String> generateMD5Hashes(String seed) {
 		Map<Integer, String> hashes = new ConcurrentHashMap<>();
 		
-		long start = currentTimeMillis();
 		IntStream.range(0, hashSize).parallel().forEach(value -> hashes.put(value, MD5HashOf(seed, value)));
-		System.out.println(currentTimeMillis() - start);
 		
 		System.out.println("Done generating hashes");
 		List<String> hashList = new ArrayList<>(hashSize);
@@ -117,7 +115,7 @@ class RunDay14_Part1 {
 	public static void main(String[] args) {
 		long start = currentTimeMillis();
 		System.out.println(KeyGen.indexOf64thKey(KeyGen.generateMD5Hashes(KeyGen.input)));
-		System.out.println(currentTimeMillis() - start);
+		System.out.println(currentTimeMillis() - start + " ms");
 	}
 }
 
@@ -125,6 +123,6 @@ class RunDay14_Part2 {
 	public static void main(String[] args) {
 		long start = currentTimeMillis();
 		System.out.println(KeyGen.indexOf64thKey(KeyGen.generateStretchedMD5Hashes(KeyGen.input)));
-		System.out.println(currentTimeMillis() - start);
+		System.out.println(currentTimeMillis() - start + " ms");
 	}
 }
