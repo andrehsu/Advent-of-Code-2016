@@ -191,8 +191,8 @@ public class RTG {
 		}
 	}
 	
-	public static final List<String> input = Input.readAllLines("Day 11/input.txt"),
-			inputPart2 = Input.readAllLines("Day 11/input part 2.txt");
+	public static final List<String> input = Input.readAllLines("Day 11 (Works only on my input)/input.txt"),
+			inputPart2 = Input.readAllLines("Day 11 (Works only on my input)/input part 2.txt");
 	
 	private final List<Set<Item>> initialLayout;
 	
@@ -260,7 +260,7 @@ public class RTG {
 	}
 	
 	private static class Test {
-		private static final List<String> testInput = Input.readAllLines("Day 11/test input.txt");
+		private static final List<String> testInput = Input.readAllLines("Day 11 (Works only on my input)/test input.txt");
 		
 		public static void main(String[] args) {
 			RTG rtg = new RTG(testInput);
