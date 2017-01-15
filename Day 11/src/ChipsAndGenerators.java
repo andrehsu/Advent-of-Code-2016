@@ -226,6 +226,7 @@ public class ChipsAndGenerators {
 	private void run() {
 		LinkedList<Node> nodes = Node.firstNode(initialLayout);
 		Set<BigInteger> heuristics = new HashSet<>();
+		trimNodes(nodes, heuristics);
 		
 		for (int depth = 1; nodes.size() != 0; depth++) {
 			if (print)
