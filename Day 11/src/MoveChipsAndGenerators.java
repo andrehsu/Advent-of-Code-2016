@@ -176,6 +176,8 @@ public class MoveChipsAndGenerators {
 			input = Input.readAllLines("Day 11/input.txt"),
 			input2 = Input.readAllLines("Day 11/input part 2.txt");
 	
+	private final boolean print;
+	
 	private List<Set<Item>> initialLayout;
 	private int minimumSteps = -1;
 	
@@ -183,7 +185,9 @@ public class MoveChipsAndGenerators {
 		return minimumSteps;
 	}
 	
-	private MoveChipsAndGenerators(List<String> input) {
+	private MoveChipsAndGenerators(List<String> input, boolean print) {
+		this.print = print;
+		
 		Pattern generatorPattern = Pattern.compile("\\w+(?= generator)"),
 				microchipPattern = Pattern.compile("\\w+(?=-compatible microchip)");
 		
@@ -214,7 +218,8 @@ public class MoveChipsAndGenerators {
 		trimNodes(nodes, heuristics);
 		
 		for (int depth = 1; nodes.size() != 0; depth++) {
-			System.out.printf("Depth %d: %d nodes%nTraversed nodes: %d%n%n", depth, nodes.size(), heuristics.size());
+			if (print)
+				System.out.printf("Depth %d: %d nodes%nTraversed nodes: %d%n%n", depth, nodes.size(), heuristics.size());
 			
 			LinkedList<Node> nextNodes = new LinkedList<>();
 			for (Node node : nodes) {
@@ -244,8 +249,8 @@ public class MoveChipsAndGenerators {
 		return clone;
 	}
 	
-	public static int calculateMinimumSteps(List<String> input) {
-		MoveChipsAndGenerators instance = new MoveChipsAndGenerators(input);
+	public static int calculateMinimumSteps(List<String> input, boolean print) {
+		MoveChipsAndGenerators instance = new MoveChipsAndGenerators(input, print);
 		instance.run();
 		return instance.getMinimumSteps();
 	}
@@ -253,33 +258,33 @@ public class MoveChipsAndGenerators {
 
 class RunDay11TestCase {
 	public static void main(String[] args) {
-		System.out.println(MoveChipsAndGenerators.calculateMinimumSteps(MoveChipsAndGenerators.testInput));
+		System.out.println(MoveChipsAndGenerators.calculateMinimumSteps(MoveChipsAndGenerators.testInput, args != null ? Boolean.valueOf(args[0]) : true));
 	}
 }
 
 class RunDay11Part1 {
 	public static void main(String[] args) {
-		System.out.println(MoveChipsAndGenerators.calculateMinimumSteps(MoveChipsAndGenerators.input));
+		System.out.println(MoveChipsAndGenerators.calculateMinimumSteps(MoveChipsAndGenerators.input, args != null ? Boolean.valueOf(args[0]) : true));
 	}
 }
 
 class RunDay11Part2 {
 	public static void main(String[] args) {
-		System.out.println(MoveChipsAndGenerators.calculateMinimumSteps(MoveChipsAndGenerators.input2));
+		System.out.println(MoveChipsAndGenerators.calculateMinimumSteps(MoveChipsAndGenerators.input2, args != null ? Boolean.valueOf(args[0]) : true));
 	}
 }
 
 class RunJeffDay11Part1 {
 	public static void main(String[] args) {
-		System.out.println(MoveChipsAndGenerators.calculateMinimumSteps(Input.readAllLines("Day 11/jeffery input.txt")));
+		System.out.println(MoveChipsAndGenerators.calculateMinimumSteps(Input.readAllLines("Day 11/jeffery input.txt"), args != null ? Boolean.valueOf(args[0]) : true));
 	}
 }
 
 class RunAll {
 	public static void main(String[] args) {
-		RunDay11TestCase.main(null);
-		RunDay11Part1.main(null);
-		RunDay11Part2.main(null);
-		RunJeffDay11Part1.main(null);
+		RunDay11TestCase.main(new String[]{"false"});
+		RunDay11Part1.main(new String[]{"false"});
+		RunDay11Part2.main(new String[]{"false"});
+		RunJeffDay11Part1.main(new String[]{"false"});
 	}
 }
