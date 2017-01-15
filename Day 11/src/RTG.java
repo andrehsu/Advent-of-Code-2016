@@ -247,7 +247,11 @@ public class RTG {
 	}
 	
 	private static <E> List<Set<E>> cloneListOfSet(List<Set<E>> input) {
-		List<Set<E>> output = new ArrayList<>(input.size());
+		List<Set<E>> output;
+		if (input instanceof LinkedList) {
+			output = new LinkedList<>();
+		} else
+			output = new ArrayList<>(input.size());
 		for (Set<E> es : input) {
 			output.add(new HashSet<>(es));
 		}
