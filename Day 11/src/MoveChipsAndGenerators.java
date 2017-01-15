@@ -159,7 +159,24 @@ public class MoveChipsAndGenerators {
 	}
 	
 	private void run() {
+		LinkedList<Node> nodes = Node.firstNode(initialLayout);
+		Set<BigInteger> heuristics = new HashSet<>();
+		trimNodes(nodes, heuristics);
 		
+		for (int depth = 1; nodes.size() != 0; depth++) {
+			for (Node node : nodes) {
+				if (node.isDone()) {
+					minimumSteps = node.getSteps();
+					return;
+				} else
+					nodes.addAll(node.nextNodes());
+			}
+			trimNodes(nodes, heuristics);
+		}
+	}
+	
+	private static void trimNodes(LinkedList<Node> nodes, Set<BigInteger> heuristics) {
+		nodes.removeIf(node -> !heuristics.add(node.heuristic()));
 	}
 	
 	private static <E> List<Set<E>> cloneListOfSet(List<Set<E>> original) {
