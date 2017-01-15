@@ -17,7 +17,7 @@ public class Assembunny2Interpreter {
 	}
 	
 	public static int interpretPart2(List<String> input, int eggs) {
-		Assembunny2Interpreter interpreter = new Assembunny2Interpreter(input, eggs, true);
+		Assembunny2Interpreter interpreter = new Assembunny2Interpreter(input, eggs);
 		interpreter.run();
 		return interpreter.getA();
 	}
@@ -25,20 +25,14 @@ public class Assembunny2Interpreter {
 	private final List<String> code;
 	private Map<Character, Integer> registers;
 	private final int eggs;
-	private final boolean bunnyMultiple;
 	
 	private int getA() {
 		return registers.get('a');
 	}
 	
 	private Assembunny2Interpreter(List<String> code, int eggs) {
-		this(code, eggs, false);
-	}
-	
-	private Assembunny2Interpreter(List<String> code, int eggs, boolean bunnyMultiple) {
 		this.code = code;
 		this.eggs = eggs;
-		this.bunnyMultiple = bunnyMultiple;
 	}
 	
 	private void run() {
