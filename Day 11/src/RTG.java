@@ -15,11 +15,15 @@ public class RTG {
 		private final String element;
 		private final Type type;
 		private final String toString;
+		private final int hashCode;
 		
 		public Item(String element, Type type) {
 			this.element = element.trim().toLowerCase();
 			this.type = type;
 			toString = String.format("%S%S", element.charAt(0), type.toString().charAt(0));
+			int result = element.hashCode();
+			result = 31 * result + type.hashCode();
+			hashCode = result;
 		}
 		
 		boolean isMicrochip() {
@@ -48,19 +52,15 @@ public class RTG {
 		
 		@Override
 		public int hashCode() {
-			int result = element.hashCode();
-			result = 31 * result + type.hashCode();
-			return result;
-		}
-		
-		static boolean isPair(Item i1, Item i2) {
-			return (i1.type != i2.type) && !i1.element.equals(i2.element);
+			return hashCode;
 		}
 	}
 	
 	private static class Node {
+		// prime used in heuristic calculation
 		private static final BigInteger PRIME = BigInteger.valueOf(7);
 		
+		// parent for debugging purposes
 		private final Node parent;
 		private final int elevatorFloor,
 				steps;
@@ -85,6 +85,7 @@ public class RTG {
 			
 			boolean emptySoFar = true;
 			for (int destinationFloor = 0; destinationFloor < 4; destinationFloor++) {
+				// Optimization: Don't move items down to empty floors below
 				if (emptySoFar && layout.get(destinationFloor).size() == 0) continue;
 				else
 					emptySoFar = false;
@@ -92,11 +93,11 @@ public class RTG {
 				if (destinationFloor == elevatorFloor) continue;
 				
 				for (Item item1 : layout.get(elevatorFloor)) {
-					getOutput(elevatorFloor, destinationFloor, layout, item1).ifPresent(nextNodes::add);
+					getNode(elevatorFloor, destinationFloor, layout, item1).ifPresent(nextNodes::add);
 					
 					for (Item item2 : layout.get(elevatorFloor)) {
 						if (item1.equals(item2)) continue;
-						getOutput(elevatorFloor, destinationFloor, layout, item1, item2).ifPresent(nextNodes::add);
+						getNode(elevatorFloor, destinationFloor, layout, item1, item2).ifPresent(nextNodes::add);
 					}
 				}
 			}
@@ -109,13 +110,15 @@ public class RTG {
 		}
 		
 		boolean isDone() {
+			// return if all items are on top floor
 			return layout.get(0).size() == 0 &&
 					layout.get(1).size() == 0 &&
 					layout.get(2).size() == 0;
 		}
 		
 		BigInteger heuristic() {
-			BigInteger heuristic = BigInteger.ONE;
+			// Generate heuristic for nodes
+			BigInteger heuristic = BigInteger.ZERO;
 			for (int floor = 0; floor < 4; floor++) {
 				int microchipCount = 0,
 						generatorCount = 0;
@@ -135,7 +138,7 @@ public class RTG {
 			return heuristic;
 		}
 		
-		private Optional<Node> getOutput(int elevatorFloor, int destinationFloor, List<Set<Item>> layout, Item... items) {
+		private Optional<Node> getNode(int elevatorFloor, int destinationFloor, List<Set<Item>> layout, Item... items) {
 			layout = cloneListOfSet(layout);
 			Set<Item> elevator = new HashSet<>();
 			int steps = this.steps;
@@ -145,7 +148,8 @@ public class RTG {
 			
 			for (; elevatorFloor != destinationFloor; elevatorFloor += destinationFloor > elevatorFloor ? 1 : -1) {
 				steps++;
-				if (checkForBlownChip(elevatorFloor, layout, elevator) == true) {
+				// If any chip was blown during movement
+				if (hasBlownChip(elevatorFloor, layout, elevator)) {
 					return Optional.empty();
 				}
 			}
@@ -155,23 +159,24 @@ public class RTG {
 			return Optional.of(new Node(isZerothNode ? null : this, elevatorFloor, steps, layout));
 		}
 		
-		private static boolean checkForBlownChip(int floorNumber, List<Set<Item>> layout, Set<Item> elevator) {
+		private static boolean hasBlownChip(int floorNumber, List<Set<Item>> layout, Set<Item> elevator) {
 			Set<Item> floor = new HashSet<>(layout.get(floorNumber));
 			floor.addAll(elevator);
 			
 			items:
 			for (Item item1 : floor) {
 				if (item1.isMicrochip()) {
+					// Check for generator protecting chip
 					for (Item item2 : floor) {
-						if (!item1.equals(item2) && Item.isPair(item1, item2)) {
-							continue items;
+						if (item2.isGenerator()) {
+							if (!item1.element.equals(item2.element))
+								continue items;
 						}
 					}
 					
+					// Check if ANY other generator present to blow chip
 					for (Item item2 : floor) {
-						if (item2.isGenerator() && !Item.isPair(item1, item2)) {
-							return true;
-						}
+						if (item2.isGenerator()) return true;
 					}
 				}
 			}
@@ -182,27 +187,6 @@ public class RTG {
 		static LinkedList<Node> firstNodes(List<Set<Item>> initialLayout) {
 			Node zerothNode = new Node(null, 0, 0, initialLayout, true);
 			return zerothNode.getNextNodes();
-		}
-		
-		private static class TestHeuristic {
-			public static void main(String[] args) {
-				List<Set<Item>> layout1 = new ArrayList<>(4);
-				while (layout1.size() < 4) layout1.add(new HashSet<>());
-				layout1.get(3).add(new Item("lithium", Item.Type.GENERATOR));
-				layout1.get(3).add(new Item("hydrogen", Item.Type.MICROCHIP));
-				
-				List<Set<Item>> layout2 = new ArrayList<>(4);
-				while (layout2.size() < 4) layout2.add(new HashSet<>());
-				layout2.get(3).add(new Item("hydrogen", Item.Type.GENERATOR));
-				layout2.get(3).add(new Item("lithium", Item.Type.MICROCHIP));
-				
-				Node node1 = new Node(null, 0, 0, layout1);
-				Node node2 = new Node(null, 0, 0, layout2);
-				System.out.println(node1.heuristic());
-				System.out.println(node2.heuristic());
-			}
-			
-			
 		}
 	}
 	
@@ -265,7 +249,7 @@ public class RTG {
 	private static <E> List<Set<E>> cloneListOfSet(List<Set<E>> input) {
 		List<Set<E>> output = new ArrayList<>(input.size());
 		for (Set<E> es : input) {
-			output.add(new HashSet<E>(es));
+			output.add(new HashSet<>(es));
 		}
 		return output;
 	}
@@ -285,7 +269,7 @@ class RunDay11_Part1 {
 	public static void main(String[] args) {
 		RTG rtg = new RTG(RTG.input);
 		rtg.run();
-		System.out.println(rtg.getMinimumSteps());
+		System.out.println(rtg.getMinimumSteps()); // 37
 	}
 }
 
@@ -293,6 +277,6 @@ class RunDay11_Part2 {
 	public static void main(String[] args) {
 		RTG rtg = new RTG(RTG.inputPart2);
 		rtg.run();
-		System.out.println(rtg.getMinimumSteps());
+		System.out.println(rtg.getMinimumSteps()); // 61
 	}
 }
