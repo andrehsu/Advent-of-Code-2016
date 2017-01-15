@@ -169,6 +169,7 @@ public class RTG {
 					// Check for generator protecting chip
 					for (Item item2 : floor) {
 						if (item2.isGenerator()) {
+							// for some reason not equals work
 							if (!item1.element.equals(item2.element))
 								continue items;
 						}
