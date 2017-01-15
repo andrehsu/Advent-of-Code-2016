@@ -2,6 +2,8 @@ import andre.adventofcode.input.Input;
 
 import java.math.BigInteger;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
@@ -182,19 +184,23 @@ public class MoveChipsAndGenerators {
 	}
 	
 	private MoveChipsAndGenerators(List<String> input) {
+		Pattern generatorPattern = Pattern.compile("\\w+(?= generator)"),
+				microchipPattern = Pattern.compile("\\w+(?=-compatible microchip)");
+		
 		initialLayout = new ArrayList<>(4);
 		for (String s : input) {
 			Set<Item> floor = new HashSet<>();
 			
 			if (!s.contains("nothing")) {
-				s = s.replaceAll("The \\w+ floor contains |a |\\.|-compatible|an ", "").replaceAll(",", " and").replaceAll("and and", "and");
-				String[] item_strings = s.trim().split(" and ");
-				for (String item_string : item_strings) {
-					String[] tokens = item_string.trim().split(" +");
-					if (tokens[1].equals("microchip")) {
-						floor.add(new Item(tokens[0], Item.Type.MICROCHIP));
-					} else
-						floor.add(new Item(tokens[0], Item.Type.GENERATOR));
+				// Do microchip
+				Matcher generators = generatorPattern.matcher(s);
+				while (generators.find()) {
+					floor.add(new Item(generators.group(), Item.Type.GENERATOR));
+				}
+				
+				Matcher microchips = microchipPattern.matcher(s);
+				while (microchips.find()) {
+					floor.add(new Item(microchips.group(), Item.Type.MICROCHIP));
 				}
 			}
 			
@@ -266,5 +272,14 @@ class RunDay11Part2 {
 class RunJeffDay11Part1 {
 	public static void main(String[] args) {
 		System.out.println(MoveChipsAndGenerators.calculateMinimumSteps(Input.readAllLines("Day 11/jeffery input.txt")));
+	}
+}
+
+class RunAll {
+	public static void main(String[] args) {
+		RunDay11TestCase.main(null);
+		RunDay11Part1.main(null);
+		RunDay11Part2.main(null);
+		RunJeffDay11Part1.main(null);
 	}
 }
