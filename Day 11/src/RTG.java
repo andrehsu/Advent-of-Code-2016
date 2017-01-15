@@ -58,7 +58,7 @@ public class RTG {
 	
 	private static class Node {
 		// prime used in heuristic calculation
-		private static final BigInteger PRIME = BigInteger.valueOf(7);
+		private static final BigInteger PRIME = BigInteger.valueOf(31);
 		
 		// parent for debugging purposes
 		private final Node parent;
