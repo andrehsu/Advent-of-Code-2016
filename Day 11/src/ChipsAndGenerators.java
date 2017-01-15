@@ -11,7 +11,7 @@ import static java.math.BigInteger.ZERO;
 /**
  * Created by Andre on 1/15/2017.
  */
-public class MoveChipsAndGenerators {
+public class ChipsAndGenerators {
 	private static final class Item {
 		enum Type {
 			GENERATOR, MICROCHIP
@@ -27,7 +27,7 @@ public class MoveChipsAndGenerators {
 			this.element = element.trim().toLowerCase();
 			this.type = type;
 			
-			toString = String.format("%S%S", this.element.charAt(0), this.type.toString().charAt(0));
+			toString = String.format("%S%S", this.element.substring(0, 2), this.type.toString().charAt(0));
 			
 			int result = element.hashCode();
 			result = 31 * result + type.hashCode();
@@ -54,7 +54,7 @@ public class MoveChipsAndGenerators {
 			
 			Item item = (Item) o;
 			
-			if (!element.equals(item.element)) return false;
+			if (element != null ? !element.equals(item.element) : item.element != null) return false;
 			return type == item.type;
 		}
 		
@@ -73,6 +73,7 @@ public class MoveChipsAndGenerators {
 		private static final BigInteger PRIME = BigInteger.valueOf(31);
 		
 		private final Node parent;
+		private final String move;
 		private final List<Set<Item>> layout;
 		private final int elevatorFloor;
 		private final int steps;
@@ -81,8 +82,9 @@ public class MoveChipsAndGenerators {
 			return steps;
 		}
 		
-		private Node(Node parent, List<Set<Item>> layout, int elevatorFloor, int steps) {
+		private Node(Node parent, String move, List<Set<Item>> layout, int elevatorFloor, int steps) {
 			this.parent = parent;
+			this.move = move;
 			this.layout = layout;
 			this.elevatorFloor = elevatorFloor;
 			this.steps = steps;
@@ -105,7 +107,9 @@ public class MoveChipsAndGenerators {
 						List<Set<Item>> nextLayout = cloneListOfSet(layout);
 						nextLayout.get(elevatorFloor).remove(item1);
 						nextLayout.get(destinationFloor).add(item1);
-						output.add(new Node(this, nextLayout, destinationFloor, steps + 1));
+						output.add(new Node(this,
+								move + "\n" + item1 + " -> " + (destinationFloor + 1),
+								nextLayout, destinationFloor, steps + 1));
 					}
 					
 					for (Item item2 : layout.get(elevatorFloor)) {
@@ -113,7 +117,9 @@ public class MoveChipsAndGenerators {
 							List<Set<Item>> nextLayout = cloneListOfSet(layout);
 							nextLayout.get(elevatorFloor).removeAll(Arrays.asList(item1, item2));
 							nextLayout.get(destinationFloor).addAll(Arrays.asList(item1, item2));
-							output.add(new Node(this, nextLayout, destinationFloor, steps + 1));
+							output.add(new Node(this,
+									move + "\n" + item1 + ", " + item2 + " -> " + (destinationFloor + 1),
+									nextLayout, destinationFloor, steps + 1));
 						}
 					}
 				}
@@ -123,7 +129,7 @@ public class MoveChipsAndGenerators {
 		}
 		
 		BigInteger heuristic() {
-			BigInteger heuristic = ZERO;
+			BigInteger heuristic = BigInteger.valueOf(elevatorFloor);
 			
 			for (Set<Item> floor : layout) {
 				BigInteger floorValue,
@@ -140,7 +146,11 @@ public class MoveChipsAndGenerators {
 				heuristic = heuristic.multiply(PRIME).add(floorValue);
 			}
 			
-			return heuristic.multiply(PRIME).add(BigInteger.valueOf(elevatorFloor));
+			return heuristic.multiply(PRIME);
+		}
+		
+		void printMove() {
+			System.out.println(move);
 		}
 		
 		private static boolean hasBlownChip(List<Set<Item>> layout, int elevatorFloor, Item... elevatorItems) {
@@ -168,13 +178,14 @@ public class MoveChipsAndGenerators {
 		}
 		
 		static LinkedList<Node> firstNode(List<Set<Item>> initialLayouts) {
-			return new Node(null, initialLayouts, 0, 0).nextNodes();
+			return new Node(null, "", initialLayouts, 0, 0).nextNodes();
 		}
 	}
 	
 	public static final List<String> testInput = Input.readAllLines("Day 11/test input.txt"),
 			input = Input.readAllLines("Day 11/input.txt"),
-			input2 = Input.readAllLines("Day 11/input part 2.txt");
+			input2 = Input.readAllLines("Day 11/input part 2.txt"),
+			jefferyInput = Input.readAllLines("Day 11/jeffery input.txt");
 	
 	private final boolean print;
 	
@@ -185,7 +196,7 @@ public class MoveChipsAndGenerators {
 		return minimumSteps;
 	}
 	
-	private MoveChipsAndGenerators(List<String> input, boolean print) {
+	private ChipsAndGenerators(List<String> input, boolean print) {
 		this.print = print;
 		
 		Pattern generatorPattern = Pattern.compile("\\w+(?= generator)"),
@@ -215,7 +226,6 @@ public class MoveChipsAndGenerators {
 	private void run() {
 		LinkedList<Node> nodes = Node.firstNode(initialLayout);
 		Set<BigInteger> heuristics = new HashSet<>();
-		trimNodes(nodes, heuristics);
 		
 		for (int depth = 1; nodes.size() != 0; depth++) {
 			if (print)
@@ -225,6 +235,7 @@ public class MoveChipsAndGenerators {
 			for (Node node : nodes) {
 				if (node.isDone()) {
 					minimumSteps = node.getSteps();
+					if (print) node.printMove();
 					return;
 				} else
 					nextNodes.addAll(node.nextNodes());
@@ -250,7 +261,7 @@ public class MoveChipsAndGenerators {
 	}
 	
 	public static int calculateMinimumSteps(List<String> input, boolean print) {
-		MoveChipsAndGenerators instance = new MoveChipsAndGenerators(input, print);
+		ChipsAndGenerators instance = new ChipsAndGenerators(input, print);
 		instance.run();
 		return instance.getMinimumSteps();
 	}
@@ -258,25 +269,29 @@ public class MoveChipsAndGenerators {
 
 class RunDay11TestCase {
 	public static void main(String[] args) {
-		System.out.println(MoveChipsAndGenerators.calculateMinimumSteps(MoveChipsAndGenerators.testInput, args != null ? Boolean.valueOf(args[0]) : true));
+		boolean print = args == null || args.length != 1 ? true : Boolean.valueOf(args[0]);
+		System.out.println(ChipsAndGenerators.calculateMinimumSteps(ChipsAndGenerators.testInput, print));
 	}
 }
 
 class RunDay11Part1 {
 	public static void main(String[] args) {
-		System.out.println(MoveChipsAndGenerators.calculateMinimumSteps(MoveChipsAndGenerators.input, args != null ? Boolean.valueOf(args[0]) : true));
+		boolean print = args == null || args.length != 1 ? true : Boolean.valueOf(args[0]);
+		System.out.println(ChipsAndGenerators.calculateMinimumSteps(ChipsAndGenerators.input, print));
 	}
 }
 
 class RunDay11Part2 {
 	public static void main(String[] args) {
-		System.out.println(MoveChipsAndGenerators.calculateMinimumSteps(MoveChipsAndGenerators.input2, args != null ? Boolean.valueOf(args[0]) : true));
+		boolean print = args == null || args.length != 1 ? true : Boolean.valueOf(args[0]);
+		System.out.println(ChipsAndGenerators.calculateMinimumSteps(ChipsAndGenerators.input2, print));
 	}
 }
 
 class RunJeffDay11Part1 {
 	public static void main(String[] args) {
-		System.out.println(MoveChipsAndGenerators.calculateMinimumSteps(Input.readAllLines("Day 11/jeffery input.txt"), args != null ? Boolean.valueOf(args[0]) : true));
+		boolean print = args == null || args.length != 1 ? true : Boolean.valueOf(args[0]);
+		System.out.println(ChipsAndGenerators.calculateMinimumSteps(ChipsAndGenerators.jefferyInput, print));
 	}
 }
 
