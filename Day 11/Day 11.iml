@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Advent of Code 2016" />
+    <orderEntry type="library" name="scala-sdk-2.12.1" level="project" />
   </component>
 </module>
