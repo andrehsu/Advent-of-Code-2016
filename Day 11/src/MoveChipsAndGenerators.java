@@ -262,3 +262,9 @@ class RunDay11Part2 {
 		System.out.println(MoveChipsAndGenerators.calculateMinimumSteps(MoveChipsAndGenerators.input2));
 	}
 }
+
+class RunJeffDay11Part1 {
+	public static void main(String[] args) {
+		System.out.println(MoveChipsAndGenerators.calculateMinimumSteps(Input.readAllLines("Day 11/jeffery input.txt")));
+	}
+}
