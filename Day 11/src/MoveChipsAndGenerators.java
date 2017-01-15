@@ -63,7 +63,7 @@ public class MoveChipsAndGenerators {
 		
 		@Override
 		public String toString() {
-			return toString();
+			return toString;
 		}
 	}
 	
@@ -129,9 +129,9 @@ public class MoveChipsAndGenerators {
 						microchipCount = ZERO;
 				for (Item item : floor) {
 					if (item.isGenerator())
-						generatorCount.add(ONE);
+						generatorCount = generatorCount.add(ONE);
 					else if (item.isMicrochip())
-						microchipCount.add(ONE);
+						microchipCount = microchipCount.add(ONE);
 				}
 				
 				floorValue = generatorCount.multiply(PRIME).add(microchipCount);
@@ -175,7 +175,7 @@ public class MoveChipsAndGenerators {
 			input2 = Input.readAllLines("Day 11/input part 2.txt");
 	
 	private List<Set<Item>> initialLayout;
-	private int minimumSteps = 1;
+	private int minimumSteps = -1;
 	
 	private int getMinimumSteps() {
 		return minimumSteps;
@@ -187,7 +187,7 @@ public class MoveChipsAndGenerators {
 			Set<Item> floor = new HashSet<>();
 			
 			if (!s.contains("nothing")) {
-				s = s.replaceAll("The \\w+ floor contains |a |\\.|compatible|an ", "").replaceAll(",", " and").replaceAll("and and", "and");
+				s = s.replaceAll("The \\w+ floor contains |a |\\.|-compatible|an ", "").replaceAll(",", " and").replaceAll("and and", "and");
 				String[] item_strings = s.trim().split(" and ");
 				for (String item_string : item_strings) {
 					String[] tokens = item_string.trim().split(" +");
@@ -208,23 +208,28 @@ public class MoveChipsAndGenerators {
 		trimNodes(nodes, heuristics);
 		
 		for (int depth = 1; nodes.size() != 0; depth++) {
+			System.out.printf("Depth %d: %d nodes%nTraversed nodes: %d%n%n", depth, nodes.size(), heuristics.size());
+			
+			LinkedList<Node> nextNodes = new LinkedList<>();
 			for (Node node : nodes) {
 				if (node.isDone()) {
 					minimumSteps = node.getSteps();
 					return;
 				} else
-					nodes.addAll(node.nextNodes());
+					nextNodes.addAll(node.nextNodes());
 			}
-			trimNodes(nodes, heuristics);
+			trimNodes(nextNodes, heuristics);
+			nodes = nextNodes;
 		}
 	}
 	
 	private static void trimNodes(LinkedList<Node> nodes, Set<BigInteger> heuristics) {
+		// Remove if cannot add (already exists)
 		nodes.removeIf(node -> !heuristics.add(node.heuristic()));
 	}
 	
 	private static <E> List<Set<E>> cloneListOfSet(List<Set<E>> original) {
-		List<Set<E>> clone = new ArrayList<>(original);
+		List<Set<E>> clone = new ArrayList<>(original.size());
 		
 		for (Set<E> es : original) {
 			clone.add(new HashSet<E>(es));
