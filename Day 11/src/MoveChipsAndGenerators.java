@@ -95,6 +95,28 @@ public class MoveChipsAndGenerators {
 		LinkedList<Node> nextNodes() {
 			LinkedList<Node> output = new LinkedList<>();
 			
+			for (int destinationFloor : new int[]{elevatorFloor - 1, elevatorFloor + 1}) {
+				if (destinationFloor < 0 || destinationFloor > 3) continue;
+				
+				for (Item item1 : layout.get(elevatorFloor)) {
+					if (!hasBlownChip(layout, destinationFloor, item1)) {
+						List<Set<Item>> nextLayout = cloneListOfSet(layout);
+						nextLayout.get(elevatorFloor).remove(item1);
+						nextLayout.get(destinationFloor).add(item1);
+						output.add(new Node(this, nextLayout, destinationFloor, steps + 1));
+					}
+					
+					for (Item item2 : layout.get(elevatorFloor)) {
+						if (item1 != item2 && !hasBlownChip(layout, destinationFloor, item1, item2)) {
+							List<Set<Item>> nextLayout = cloneListOfSet(layout);
+							nextLayout.get(elevatorFloor).removeAll(Arrays.asList(item1, item2));
+							nextLayout.get(destinationFloor).addAll(Arrays.asList(item1, item2));
+							output.add(new Node(this, nextLayout, destinationFloor, steps + 1));
+						}
+					}
+				}
+			}
+			
 			return output;
 		}
 		
@@ -119,10 +141,32 @@ public class MoveChipsAndGenerators {
 			return heuristic.multiply(PRIME).add(BigInteger.valueOf(elevatorFloor));
 		}
 		
-		static LinkedList<Node> firstNode(List<Set<Item>> initialLayouts) {
-			LinkedList<Node> output = new LinkedList<>();
+		private static boolean hasBlownChip(List<Set<Item>> layout, int elevatorFloor, Item... elevatorItems) {
+			Set<Item> floor = new HashSet<>(layout.get(elevatorFloor));
+			floor.addAll(Arrays.asList(elevatorItems));
 			
-			return output;
+			item1:
+			for (Item item1 : floor) {
+				if (item1.isMicrochip()) {
+					for (Item item2 : floor) {
+						if (Item.isPair(item1, item2)) {
+							continue item1;
+						}
+					}
+					
+					for (Item item2 : floor) {
+						if (item2.isGenerator()) {
+							return true;
+						}
+					}
+				}
+			}
+			
+			return false;
+		}
+		
+		static LinkedList<Node> firstNode(List<Set<Item>> initialLayouts) {
+			return new Node(null, initialLayouts, 0, 0).nextNodes();
 		}
 	}
 	
