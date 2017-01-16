@@ -5,7 +5,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.ZERO;
+import static java.math.BigInteger.valueOf;
 
 /**
  * Created by Andre on 1/15/2017.
@@ -134,11 +135,10 @@ public class ChipsAndGenerators {
 		}
 		
 		BigInteger heuristic() {
-			final BigInteger PRIME = BigInteger.valueOf(31);
-			BigInteger heuristic = ONE;
+			final BigInteger PRIME = valueOf(31);
+			BigInteger heuristic = ZERO;
 			
 			for (Set<Item> floor : layout) {
-				BigInteger floorValue;
 				int generatorCount = 0,
 						microchipCount = 0;
 				for (Item item : floor) {
@@ -148,11 +148,11 @@ public class ChipsAndGenerators {
 						microchipCount++;
 				}
 				
-				floorValue = BigInteger.valueOf(microchipCount).multiply(PRIME).add(BigInteger.valueOf(generatorCount));
-				heuristic = heuristic.multiply(PRIME).add(floorValue);
+				heuristic = heuristic.multiply(PRIME).add(valueOf(generatorCount))
+						.multiply(PRIME).add(valueOf(microchipCount));
 			}
 			
-			return heuristic.multiply(PRIME).add(BigInteger.valueOf(elevatorFloor));
+			return heuristic.multiply(PRIME).add(valueOf(elevatorFloor));
 		}
 		
 		void printMove() {
