@@ -86,10 +86,11 @@ public class ChipsAndGenerators {
 			this.steps = steps;
 		}
 		
-		boolean isDone() {
+		boolean isSolution() {
 			return layout.get(0).isEmpty() &&
 					layout.get(1).isEmpty() &&
-					layout.get(2).isEmpty();
+					layout.get(2).isEmpty() &&
+					elevatorFloor == 3;
 		}
 		
 		LinkedList<Node> nextNodes() {
@@ -114,6 +115,7 @@ public class ChipsAndGenerators {
 					}
 					
 					for (Item item2 : layout.get(elevatorFloor)) {
+						if (item1 == item2) continue; // Same item twice
 						nextLayout = getLayout(layout, elevatorFloor, destinationFloor, item1, item2);
 						if (!hasBlownChip(nextLayout)) {
 							output.add(new Node(
@@ -146,7 +148,7 @@ public class ChipsAndGenerators {
 						microchipCount++;
 				}
 				
-				floorValue = BigInteger.valueOf(generatorCount).multiply(PRIME).add(BigInteger.valueOf(microchipCount));
+				floorValue = BigInteger.valueOf(microchipCount).multiply(PRIME).add(BigInteger.valueOf(generatorCount));
 				heuristic = heuristic.multiply(PRIME).add(floorValue);
 			}
 			
@@ -248,7 +250,7 @@ public class ChipsAndGenerators {
 			
 			LinkedList<Node> nextNodes = new LinkedList<>();
 			for (Node node : nodes) {
-				if (node.isDone()) {
+				if (node.isSolution()) {
 					minimumSteps = node.getSteps();
 					if (print) node.printMove();
 					return;
