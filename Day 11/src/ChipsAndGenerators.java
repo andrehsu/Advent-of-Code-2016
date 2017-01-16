@@ -99,9 +99,17 @@ public class ChipsAndGenerators {
 			for (int destinationFloor : Arrays.asList(elevatorFloor - 1, elevatorFloor + 1)) {
 				if (destinationFloor < 0 || destinationFloor > 3) continue;
 				
+				List<Set<Item>> nextLayout;
 				for (Item item1 : layout.get(elevatorFloor)) {
+					nextLayout = getLayout(layout, elevatorFloor, destinationFloor, item1);
+					if (!hasBlownChip(nextLayout)) {
+						output.add(new Node(this,
+								move + "\n" + item1 + " -> " + (destinationFloor + 1),
+								nextLayout, destinationFloor, steps + 1));
+					}
+					
 					for (Item item2 : layout.get(elevatorFloor)) {
-						List<Set<Item>> nextLayout = getLayout(layout, elevatorFloor, destinationFloor, item1, item2);
+						nextLayout = getLayout(layout, elevatorFloor, destinationFloor, item1, item2);
 						if (!hasBlownChip(nextLayout)) {
 							output.add(new Node(this,
 									move + "\n" + item1 + ", " + item2 + " -> " + (destinationFloor + 1),
@@ -254,7 +262,7 @@ public class ChipsAndGenerators {
 	
 	private static void trimNodes(LinkedList<Node> nodes, Set<BigInteger> heuristics) {
 		// Remove if cannot add (already exists)
-		nodes.removeIf(node -> !heuristics.add(node.heuristic()));
+		nodes.removeIf(next -> !heuristics.add(next.heuristic()));
 	}
 	
 	
