@@ -134,7 +134,7 @@ public class ChipsAndGenerators {
 			return output;
 		}
 		
-		BigInteger heuristic() {
+		BigInteger heuristicCode() {
 			final BigInteger PRIME = valueOf(31);
 			BigInteger heuristic = ZERO;
 			
@@ -259,7 +259,7 @@ public class ChipsAndGenerators {
 				}
 			}
 			// Remove if cannot add (already exists)
-			nextNodes.removeIf(next -> !heuristics.add(next.heuristic()));
+			nextNodes.removeIf(next -> !heuristics.add(next.heuristicCode()));
 			nodes = nextNodes;
 		}
 	}
