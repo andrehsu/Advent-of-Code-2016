@@ -108,7 +108,7 @@ public class ChipsAndGenerators {
 					if (!hasBlownChip(nextLayout)) {
 						output.add(new Node(
 								this,
-								moves + "\n" + item1 + " -> " + (destinationFloor + 1),
+								moves + item1 + " -> " + (destinationFloor + 1) + "\n",
 								nextLayout,
 								destinationFloor,
 								steps + 1)
@@ -121,7 +121,7 @@ public class ChipsAndGenerators {
 						if (!hasBlownChip(nextLayout)) {
 							output.add(new Node(
 									this,
-									moves + "\n" + item1 + ", " + item2 + " -> " + (destinationFloor + 1),
+									moves + item1 + ", " + item2 + " -> " + (destinationFloor + 1) + "\n",
 									nextLayout,
 									destinationFloor,
 									steps + 1)
