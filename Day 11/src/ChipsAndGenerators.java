@@ -42,8 +42,8 @@ public class ChipsAndGenerators {
 		}
 		
 		// return if item1 and item2 are corresponding microchips and elements
-		static boolean isPair(Item item1, Item item2) {
-			return item1.type != item2.type && item1.element.equals(item2.element);
+		boolean isPair(Item item2) {
+			return type != item2.type && element.equals(item2.element);
 		}
 		
 		@Override
@@ -155,7 +155,7 @@ public class ChipsAndGenerators {
 					if (item1.isMicrochip()) {
 						for (Item item2 : floor) {
 							// If generator is on the same floor
-							if (Item.isPair(item1, item2)) {
+							if (item1.isPair(item2)) {
 								continue item1;
 							}
 						}
