@@ -6,7 +6,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.math.BigInteger.ONE;
-import static java.math.BigInteger.ZERO;
 
 /**
  * Created by Andre on 1/15/2017.
@@ -70,8 +69,6 @@ public class ChipsAndGenerators {
 	}
 	
 	private static final class Node {
-		private static final BigInteger PRIME = BigInteger.valueOf(31);
-		
 		private final Node parent;
 		private final String move;
 		private final List<Set<Item>> layout;
@@ -99,24 +96,13 @@ public class ChipsAndGenerators {
 		LinkedList<Node> nextNodes() {
 			LinkedList<Node> output = new LinkedList<>();
 			
-			for (int destinationFloor : new int[]{elevatorFloor - 1, elevatorFloor + 1}) {
+			for (int destinationFloor : Arrays.asList(elevatorFloor - 1, elevatorFloor + 1)) {
 				if (destinationFloor < 0 || destinationFloor > 3) continue;
 				
 				for (Item item1 : layout.get(elevatorFloor)) {
-					if (!hasBlownChip(layout, destinationFloor, item1)) {
-						List<Set<Item>> nextLayout = cloneListOfSet(layout);
-						nextLayout.get(elevatorFloor).remove(item1);
-						nextLayout.get(destinationFloor).add(item1);
-						output.add(new Node(this,
-								move + "\n" + item1 + " -> " + (destinationFloor + 1),
-								nextLayout, destinationFloor, steps + 1));
-					}
-					
 					for (Item item2 : layout.get(elevatorFloor)) {
-						if (item1 != item2 && !hasBlownChip(layout, destinationFloor, item1, item2)) {
-							List<Set<Item>> nextLayout = cloneListOfSet(layout);
-							nextLayout.get(elevatorFloor).removeAll(Arrays.asList(item1, item2));
-							nextLayout.get(destinationFloor).addAll(Arrays.asList(item1, item2));
+						List<Set<Item>> nextLayout = getLayout(layout, elevatorFloor, destinationFloor, item1, item2);
+						if (!hasBlownChip(nextLayout)) {
 							output.add(new Node(this,
 									move + "\n" + item1 + ", " + item2 + " -> " + (destinationFloor + 1),
 									nextLayout, destinationFloor, steps + 1));
@@ -129,46 +115,48 @@ public class ChipsAndGenerators {
 		}
 		
 		BigInteger heuristic() {
-			BigInteger heuristic = BigInteger.valueOf(elevatorFloor);
+			final BigInteger PRIME = BigInteger.valueOf(31);
+			BigInteger heuristic = ONE;
 			
 			for (Set<Item> floor : layout) {
-				BigInteger floorValue,
-						generatorCount = ZERO,
-						microchipCount = ZERO;
+				BigInteger floorValue;
+				int generatorCount = 0,
+						microchipCount = 0;
 				for (Item item : floor) {
 					if (item.isGenerator())
-						generatorCount = generatorCount.add(ONE);
+						generatorCount++;
 					else if (item.isMicrochip())
-						microchipCount = microchipCount.add(ONE);
+						microchipCount++;
 				}
 				
-				floorValue = generatorCount.multiply(PRIME).add(microchipCount);
+				floorValue = BigInteger.valueOf(generatorCount).multiply(PRIME).add(BigInteger.valueOf(microchipCount));
 				heuristic = heuristic.multiply(PRIME).add(floorValue);
 			}
 			
-			return heuristic.multiply(PRIME);
+			return heuristic.multiply(PRIME).add(BigInteger.valueOf(elevatorFloor));
 		}
 		
 		void printMove() {
 			System.out.println(move);
 		}
 		
-		private static boolean hasBlownChip(List<Set<Item>> layout, int elevatorFloor, Item... elevatorItems) {
-			Set<Item> floor = new HashSet<>(layout.get(elevatorFloor));
-			floor.addAll(Arrays.asList(elevatorItems));
-			
-			item1:
-			for (Item item1 : floor) {
-				if (item1.isMicrochip()) {
-					for (Item item2 : floor) {
-						if (Item.isPair(item1, item2)) {
-							continue item1;
+		private static boolean hasBlownChip(List<Set<Item>> layout) {
+			for (Set<Item> floor : layout) {
+				item1:
+				for (Item item1 : floor) {
+					if (item1.isMicrochip()) {
+						for (Item item2 : floor) {
+							// If generator is on the same floor
+							if (Item.isPair(item1, item2)) {
+								continue item1;
+							}
 						}
-					}
-					
-					for (Item item2 : floor) {
-						if (item2.isGenerator()) {
-							return true;
+						
+						
+						for (Item item2 : floor) {
+							if (item2.isGenerator()) {
+								return true;
+							}
 						}
 					}
 				}
@@ -177,8 +165,27 @@ public class ChipsAndGenerators {
 			return false;
 		}
 		
-		static LinkedList<Node> firstNode(List<Set<Item>> initialLayouts) {
-			return new Node(null, "", initialLayouts, 0, 0).nextNodes();
+		static LinkedList<Node> firstNode(List<Set<Item>> initialLayout) {
+			return new Node(null, "", initialLayout, 0, 0).nextNodes();
+		}
+		
+		private static <E> List<Set<E>> cloneListOfSet(List<Set<E>> original) {
+			List<Set<E>> clone = new ArrayList<>(original.size());
+			
+			for (Set<E> es : original) {
+				clone.add(new HashSet<>(es));
+			}
+			
+			return clone;
+		}
+		
+		private static List<Set<Item>> getLayout(List<Set<Item>> layout, int fromFloor, int toFloor, Item... items) {
+			layout = cloneListOfSet(layout);
+			Set<Item> itemSet = new HashSet<>(Arrays.asList(items));
+			layout.get(toFloor).addAll(itemSet);
+			layout.get(fromFloor).removeAll(itemSet);
+			
+			return layout;
 		}
 	}
 	
@@ -238,8 +245,9 @@ public class ChipsAndGenerators {
 					minimumSteps = node.getSteps();
 					if (print) node.printMove();
 					return;
-				} else
+				} else {
 					nextNodes.addAll(node.nextNodes());
+				}
 			}
 			trimNodes(nextNodes, heuristics);
 			nodes = nextNodes;
@@ -251,15 +259,6 @@ public class ChipsAndGenerators {
 		nodes.removeIf(node -> !heuristics.add(node.heuristic()));
 	}
 	
-	private static <E> List<Set<E>> cloneListOfSet(List<Set<E>> original) {
-		List<Set<E>> clone = new ArrayList<>(original.size());
-		
-		for (Set<E> es : original) {
-			clone.add(new HashSet<E>(es));
-		}
-		
-		return clone;
-	}
 	
 	public static int calculateMinimumSteps(List<String> input, boolean print) {
 		ChipsAndGenerators instance = new ChipsAndGenerators(input, print);
@@ -285,6 +284,7 @@ class RunDay11Part1 {
 class RunDay11Part2 {
 	public static void main(String[] args) {
 		boolean print = args == null || args.length != 1 ? true : Boolean.valueOf(args[0]);
+		System.out.println("Heoolo");
 		System.out.println(ChipsAndGenerators.calculateMinimumSteps(ChipsAndGenerators.input2, print));
 	}
 }
