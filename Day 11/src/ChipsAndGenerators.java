@@ -194,9 +194,9 @@ public class ChipsAndGenerators {
 			input2 = Input.readAllLines("Day 11/input part 2.txt"),
 			jefferyInput = Input.readAllLines("Day 11/jeffery input.txt");
 	
-	private final boolean print = true;
+	private static final boolean print = true;
+	private final List<Set<Item>> initialLayout;
 	
-	private List<Set<Item>> initialLayout;
 	private int minimumSteps = -1;
 	
 	private int getMinimumSteps() {
