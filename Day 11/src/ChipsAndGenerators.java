@@ -26,7 +26,7 @@ public class ChipsAndGenerators {
 			this.element = element.trim().toLowerCase();
 			this.type = type;
 			
-			toString = String.format("%S%S", this.element.substring(0, 2), this.type.toString().charAt(0));
+			toString = this.element.substring(0, 2).toUpperCase() + Character.toUpperCase(this.type.toString().charAt(0));
 			
 			int result = element.hashCode();
 			result = 31 * result + type.hashCode();
@@ -53,8 +53,7 @@ public class ChipsAndGenerators {
 			
 			Item item = (Item) o;
 			
-			if (element != null ? !element.equals(item.element) : item.element != null) return false;
-			return type == item.type;
+			return element.equals(item.element) && type == item.type;
 		}
 		
 		@Override
@@ -70,7 +69,7 @@ public class ChipsAndGenerators {
 	
 	private static final class Node {
 		private final Node parent;
-		private final String move;
+		private final String moves;
 		private final List<Set<Item>> layout;
 		private final int elevatorFloor;
 		private final int steps;
@@ -79,9 +78,9 @@ public class ChipsAndGenerators {
 			return steps;
 		}
 		
-		private Node(Node parent, String move, List<Set<Item>> layout, int elevatorFloor, int steps) {
+		private Node(Node parent, String moves, List<Set<Item>> layout, int elevatorFloor, int steps) {
 			this.parent = parent;
-			this.move = move;
+			this.moves = moves;
 			this.layout = layout;
 			this.elevatorFloor = elevatorFloor;
 			this.steps = steps;
@@ -97,23 +96,33 @@ public class ChipsAndGenerators {
 			LinkedList<Node> output = new LinkedList<>();
 			
 			for (int destinationFloor : Arrays.asList(elevatorFloor - 1, elevatorFloor + 1)) {
+				// Outside of the building
 				if (destinationFloor < 0 || destinationFloor > 3) continue;
 				
 				List<Set<Item>> nextLayout;
+				
 				for (Item item1 : layout.get(elevatorFloor)) {
 					nextLayout = getLayout(layout, elevatorFloor, destinationFloor, item1);
 					if (!hasBlownChip(nextLayout)) {
-						output.add(new Node(this,
-								move + "\n" + item1 + " -> " + (destinationFloor + 1),
-								nextLayout, destinationFloor, steps + 1));
+						output.add(new Node(
+								this,
+								moves + "\n" + item1 + " -> " + (destinationFloor + 1),
+								nextLayout,
+								destinationFloor,
+								steps + 1)
+						);
 					}
 					
 					for (Item item2 : layout.get(elevatorFloor)) {
 						nextLayout = getLayout(layout, elevatorFloor, destinationFloor, item1, item2);
 						if (!hasBlownChip(nextLayout)) {
-							output.add(new Node(this,
-									move + "\n" + item1 + ", " + item2 + " -> " + (destinationFloor + 1),
-									nextLayout, destinationFloor, steps + 1));
+							output.add(new Node(
+									this,
+									moves + "\n" + item1 + ", " + item2 + " -> " + (destinationFloor + 1),
+									nextLayout,
+									destinationFloor,
+									steps + 1)
+							);
 						}
 					}
 				}
@@ -145,7 +154,7 @@ public class ChipsAndGenerators {
 		}
 		
 		void printMove() {
-			System.out.println(move);
+			System.out.println(moves);
 		}
 		
 		private static boolean hasBlownChip(List<Set<Item>> layout) {
@@ -159,8 +168,6 @@ public class ChipsAndGenerators {
 								continue item1;
 							}
 						}
-						
-						
 						for (Item item2 : floor) {
 							if (item2.isGenerator()) {
 								return true;
@@ -169,7 +176,6 @@ public class ChipsAndGenerators {
 					}
 				}
 			}
-			
 			return false;
 		}
 		
@@ -179,11 +185,7 @@ public class ChipsAndGenerators {
 		
 		private static <E> List<Set<E>> cloneListOfSet(List<Set<E>> original) {
 			List<Set<E>> clone = new ArrayList<>(original.size());
-			
-			for (Set<E> es : original) {
-				clone.add(new HashSet<>(es));
-			}
-			
+			original.forEach(es -> clone.add(new HashSet<>(es)));
 			return clone;
 		}
 		
@@ -192,7 +194,6 @@ public class ChipsAndGenerators {
 			Set<Item> itemSet = new HashSet<>(Arrays.asList(items));
 			layout.get(toFloor).addAll(itemSet);
 			layout.get(fromFloor).removeAll(itemSet);
-			
 			return layout;
 		}
 	}
@@ -239,7 +240,6 @@ public class ChipsAndGenerators {
 	private void run() {
 		LinkedList<Node> nodes = Node.firstNode(initialLayout);
 		Set<BigInteger> heuristics = new HashSet<>();
-		trimNodes(nodes, heuristics);
 		
 		for (int depth = 1; nodes.size() != 0; depth++) {
 			if (print)
@@ -255,16 +255,11 @@ public class ChipsAndGenerators {
 					nextNodes.addAll(node.nextNodes());
 				}
 			}
-			trimNodes(nextNodes, heuristics);
+			// Remove if cannot add (already exists)
+			nextNodes.removeIf(next -> !heuristics.add(next.heuristic()));
 			nodes = nextNodes;
 		}
 	}
-	
-	private static void trimNodes(LinkedList<Node> nodes, Set<BigInteger> heuristics) {
-		// Remove if cannot add (already exists)
-		nodes.removeIf(next -> !heuristics.add(next.heuristic()));
-	}
-	
 	
 	public static int calculateMinimumSteps(List<String> input) {
 		ChipsAndGenerators instance = new ChipsAndGenerators(input);
