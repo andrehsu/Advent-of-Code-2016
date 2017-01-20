@@ -3,15 +3,14 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Andre on 1/8/2017.
  */
-public class StorageMatrix {
+public class StorageMatrixPart1 {
 	private static final class Disk {
-		final int x,
-				y,
+		final int initialX,
+				initialY,
 				size,
 				used,
 				available,
@@ -33,21 +32,21 @@ public class StorageMatrix {
 			return new Disk(x, y, size, used, available, usedPercentage);
 		}
 		
-		private Disk(int x, int y, int size, int used, int available, int usedPercentage) {
-			this.x = x;
-			this.y = y;
+		private Disk(int initialX, int initialY, int size, int used, int available, int usedPercentage) {
+			this.initialX = initialX;
+			this.initialY = initialY;
 			this.size = size;
 			this.used = used;
 			this.available = available;
 			this.usedPercentage = usedPercentage;
 		}
 		
-		int getX() {
-			return x;
+		int getInitialX() {
+			return initialX;
 		}
 		
-		int getY() {
-			return y;
+		int getInitialY() {
+			return initialY;
 		}
 		
 		int getSize() {
@@ -73,8 +72,8 @@ public class StorageMatrix {
 			
 			Disk disk = (Disk) o;
 			
-			if (x != disk.x) return false;
-			if (y != disk.y) return false;
+			if (initialX != disk.initialX) return false;
+			if (initialY != disk.initialY) return false;
 			if (size != disk.size) return false;
 			if (used != disk.used) return false;
 			if (available != disk.available) return false;
@@ -83,8 +82,8 @@ public class StorageMatrix {
 		
 		@Override
 		public int hashCode() {
-			int result = x;
-			result = 31 * result + y;
+			int result = initialX;
+			result = 31 * result + initialY;
 			result = 31 * result + size;
 			result = 31 * result + used;
 			result = 31 * result + available;
@@ -93,36 +92,9 @@ public class StorageMatrix {
 		}
 	}
 	
-	public static final List<String> input = Input.readAllLines("Day 22/input.txt");
+	public static final List<String> input = Input.readAllLines("Day 22/input.txt"),
+			testInput = Input.readAllLines("Day 22/test input.txt");
 	
-	
-	public static int minimumSteps(Table<Integer, Integer, Disk> diskTable) {
-		return -1;
-	}
-	
-	public static void printTable(Table<Integer, Integer, Disk> diskTable) {
-		for (Map<Integer, Disk> column : diskTable.rowMap().values()) {
-			for (Disk disk : column.values()) {
-				if (disk.getY() == 0 && disk.getX() == diskTable.columnKeySet().size() - 1) {
-					System.out.printf("%s ", 'G');
-				} else {
-					int viablePairCount = 0;
-					for (Disk diskA : diskTable.values()) {
-						if (isViablePair(diskA, disk)) viablePairCount++;
-					}
-					
-					if (viablePairCount == 0) {
-						System.out.printf("%s ", '#');
-					} else if (viablePairCount == diskTable.size() - 1) {
-						System.out.printf("%s ", '_');
-					} else {
-						System.out.printf("%s ", '.');
-					}
-				}
-			}
-			System.out.println();
-		}
-	}
 	
 	public static Table<Integer, Integer, Disk> generateDiskTable(List<String> df) {
 		Table<Integer, Integer, Disk> diskTable = HashBasedTable.create();
@@ -130,7 +102,7 @@ public class StorageMatrix {
 		for (String s : df) {
 			if (!s.matches("\\/dev\\/grid\\/node-x\\d+-y\\d+ +\\d+T +\\d+T +\\d+T +\\d+%")) continue;
 			Disk disk = Disk.create(s);
-			diskTable.put(disk.getY(), disk.getX(), disk);
+			diskTable.put(disk.getInitialY(), disk.getInitialX(), disk);
 		}
 		
 		return diskTable;
@@ -158,20 +130,10 @@ public class StorageMatrix {
 				diskA.getUsed() != 0 &&
 				diskB.getAvailable() - diskA.getUsed() >= 0;
 	}
-	
-	private static class Test {
-		private static final List<String> testInput = Input.readAllLines("Day 22/test input.txt");
-		
-		public static void main(String[] args) {
-			printTable(generateDiskTable(testInput));
-			System.out.println();
-			printTable(generateDiskTable(input));
-		}
-	}
 }
 
 class RunDay22Part1 {
 	public static void main(String[] args) {
-		System.out.println(StorageMatrix.countViablePairs(StorageMatrix.generateDiskTable(StorageMatrix.input)));
+		System.out.println(StorageMatrixPart1.countViablePairs(StorageMatrixPart1.generateDiskTable(StorageMatrixPart1.input)));
 	}
 }
