@@ -1,0 +1,2 @@
+the program probably didn't work because it didn't check for layout validity AFTER items are removed from the floor
+e.g. generators are removed causing stuff to go boom
