@@ -74,8 +74,8 @@ public class StorageMatrixPart2 {
 		}
 		
 		static LinkedList<Node> initialNodes(Table<Integer, Integer, Disk> diskTable) {
-			Point movingDisk = new Point(-1, -1),
-					goalDisk = new Point(-1, -1);
+			Point movingDisk = null,
+					goalDisk = null;
 			for (int x = 0; x < diskTable.rowKeySet().size(); x++) {
 				for (int y = 0; y < diskTable.row(x).size(); y++) {
 					Disk disk = diskTable.get(x, y);
@@ -85,6 +85,10 @@ public class StorageMatrixPart2 {
 						goalDisk = new Point(x, y);
 				}
 			}
+			
+			if (movingDisk == null || goalDisk == null)
+				return new LinkedList<>();
+			
 			return new Node(null, diskTable, 0, movingDisk, goalDisk).nextNodes();
 		}
 		
@@ -149,7 +153,6 @@ public class StorageMatrixPart2 {
 	private void run() {
 		LinkedList<Node> nodes = Node.initialNodes(diskTable);
 		Set<Integer> traversedNodes = new HashSet<>();
-		nodes.removeIf(node -> !traversedNodes.add(node.heuristics()));
 		
 		for (int steps = 1; nodes.size() != 0; steps++) {
 			System.out.printf("Depth: %d%nNodes: %d Traversed Nodes: %d%n%n", steps, nodes.size(), traversedNodes.size());
