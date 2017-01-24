@@ -1,5 +1,6 @@
 import andre.adventofcode.input.Input;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,15 +9,10 @@ import java.util.Map;
  * Created by Andre on 1/10/2017.
  */
 public class Assembunny2Interpreter {
-	public static final List<String> input = Input.readAllLines("Day 23/input.txt");
+	public static final List<String> input = Input.readAllLines("Day 23/input.txt"),
+			input2 = Input.readAllLines("Day 23/optimized input.txt");
 	
 	public static int interpret(List<String> input, int eggs) {
-		Assembunny2Interpreter interpreter = new Assembunny2Interpreter(input, eggs);
-		interpreter.run();
-		return interpreter.getA();
-	}
-	
-	public static int interpretPart2(List<String> input, int eggs) {
 		Assembunny2Interpreter interpreter = new Assembunny2Interpreter(input, eggs);
 		interpreter.run();
 		return interpreter.getA();
@@ -62,36 +58,43 @@ public class Assembunny2Interpreter {
 				case "tgl":
 					toggle(line_tokens[1], i);
 					break;
+				case "mul":
+					multiply(line_tokens[1], Arrays.copyOfRange(line_tokens, 2, line_tokens.length));
 			}
 		}
 	}
 	
-	private void increment(String condition) {
-		if (registers.containsKey(condition.charAt(0))) registers.merge(condition.charAt(0), 1, Integer::sum);
+	private void increment(String param) {
+		if (registers.containsKey(param.charAt(0))) registers.merge(param.charAt(0), 1, Integer::sum);
 	}
 	
-	private void multiply(String condition, String condition1) {
-		if (registers.containsKey(condition.charAt(0)))
-			registers.merge(condition.charAt(0), parseCondition(condition1), (integer, integer2) -> integer * integer2);
+	private void multiply(String param, String... params) {
+		int product = 1;
+		for (String s : params) {
+			product *= parseParam(s);
+		}
+		
+		if (registers.containsKey(param.charAt(0)))
+			registers.put(param.charAt(0), product);
 	}
 	
-	private void decrement(String condition) {
-		if (registers.containsKey(condition.charAt(0))) registers.merge(condition.charAt(0), -1, Integer::sum);
+	private void decrement(String param) {
+		if (registers.containsKey(param.charAt(0))) registers.merge(param.charAt(0), -1, Integer::sum);
 	}
 	
 	private void copy(String from, String to) {
 		if (registers.containsKey(to.charAt(0))) {
 			char toRegister = to.charAt(0);
-			registers.put(toRegister, parseCondition(from));
+			registers.put(toRegister, parseParam(from));
 		}
 	}
 	
-	private int jumpIf(String condition, String to) {
-		return parseCondition(condition) != 0 ? parseCondition(to) : 1;
+	private int jumpIf(String param, String to) {
+		return parseParam(param) != 0 ? parseParam(to) : 1;
 	}
 	
-	private void toggle(String condition, int currentLine) {
-		int lineToChange = currentLine + parseCondition(condition);
+	private void toggle(String param, int currentLine) {
+		int lineToChange = currentLine + parseParam(param);
 		if (lineToChange < 0 || lineToChange >= code.size()) return;
 		
 		String line = code.get(lineToChange);
@@ -111,11 +114,11 @@ public class Assembunny2Interpreter {
 		}
 	}
 	
-	private int parseCondition(String condition) {
+	private int parseParam(String param) {
 		try {
-			return Integer.parseInt(condition);
+			return Integer.parseInt(param);
 		} catch (NumberFormatException e) {
-			return registers.get(condition.charAt(0));
+			return registers.get(param.charAt(0));
 		}
 	}
 	
@@ -136,6 +139,6 @@ class RunDay23_Part1 {
 
 class RunDay23_Part2 {
 	public static void main(String[] args) {
-		System.out.println(Assembunny2Interpreter.interpret(Assembunny2Interpreter.input, 12));
+		System.out.println(Assembunny2Interpreter.interpret(Assembunny2Interpreter.input2, 12));
 	}
 }
