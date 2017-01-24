@@ -135,6 +135,10 @@ public class AirDuctMaze {
 	}
 	
 	static int shortestDistance(List<String> input) {
+		return shortestDistance(input, false);
+	}
+	
+	static int shortestDistance(List<String> input, boolean returnToStart) {
 		AirDuctMaze instance = create(input);
 		instance.run();
 		Table<Character, Character, Integer> adjacencyTable = instance.getAdjacencyTable();
@@ -147,7 +151,8 @@ public class AirDuctMaze {
 				adjacencyTable,
 				startingPoints,
 				points,
-				0);
+				0,
+				returnToStart);
 		return distances.stream().mapToInt(Integer::intValue).min().orElse(-1);
 	}
 	
@@ -155,8 +160,11 @@ public class AirDuctMaze {
 	                                          Table<Character, Character, Integer> adjacencyTable,
 	                                          char currentPoint,
 	                                          Set<Character> remainingPoints,
-	                                          int distance) {
+	                                          int distance,
+	                                          boolean returnToZero) {
 		if (remainingPoints.isEmpty()) {
+			if (returnToZero)
+				distance += adjacencyTable.get(currentPoint, '0');
 			distances.add(distance);
 		} else {
 			for (Character next_point : remainingPoints) {
@@ -167,7 +175,8 @@ public class AirDuctMaze {
 						adjacencyTable,
 						next_point,
 						next_remainingPoints,
-						distance + adjacencyTable.get(currentPoint, next_point));
+						distance + adjacencyTable.get(currentPoint, next_point),
+						returnToZero);
 			}
 		}
 	}
@@ -182,5 +191,11 @@ class RunDay24Part1Test {
 class RunDay24Part1 {
 	public static void main(String... args) {
 		System.out.println(AirDuctMaze.shortestDistance(AirDuctMaze.input));
+	}
+}
+
+class RunDay24Part2 {
+	public static void main(String... args) {
+		System.out.println(AirDuctMaze.shortestDistance(AirDuctMaze.input, true));
 	}
 }
