@@ -5,6 +5,7 @@ import com.google.common.collect.Table;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.Queue;
 import java.util.stream.Collectors;
 
 /**
@@ -151,22 +152,41 @@ public class StorageMatrixPart2 {
 	//</editor-fold>
 	
 	private void run() {
-		LinkedList<Node> nodes = Node.initialNodes(diskTable);
+		Queue<Node> nodes = Node.initialNodes(diskTable);
 		Set<Integer> traversedNodes = new HashSet<>();
 		
-		for (int steps = 1; nodes.size() != 0; steps++) {
-			System.out.printf("Depth: %d%nNodes: %d Traversed Nodes: %d%n%n", steps, nodes.size(), traversedNodes.size());
-			LinkedList<Node> nextNodes = new LinkedList<>();
-			for (Node node : nodes) {
-				if (node.isSolution()) {
-					minimumSteps = node.getSteps();
-					return;
-				} else {
-					nextNodes.addAll(node.nextNodes());
+		while (!nodes.isEmpty()) {
+			Node current = nodes.poll();
+			if (!traversedNodes.add(current.heuristics()))
+				continue;
+			else if (current.isSolution()) {
+				minimumSteps = current.getSteps();
+				return;
+			} else {
+				nodes.addAll(current.nextNodes());
+			}
+		}
+	}
+	
+	private void print() {
+		for (int y = 0; y < diskTable.columnKeySet().size(); y++) {
+			for (int x = 0; x < diskTable.column(y).size(); x++) {
+				switch (diskTable.get(x, y)) {
+					case UNMOVABLE:
+						System.out.print("# ");
+						break;
+					case MOVABLE:
+						System.out.print(". ");
+						break;
+					case EMPTY:
+						System.out.print("_ ");
+						break;
+					case GOAL:
+						System.out.print("G ");
+						break;
 				}
 			}
-			nextNodes.removeIf(node -> !traversedNodes.add(node.heuristics()));
-			nodes = nextNodes;
+			System.out.println();
 		}
 	}
 	
@@ -174,6 +194,17 @@ public class StorageMatrixPart2 {
 		StorageMatrixPart2 instance = create(input);
 		instance.run();
 		return instance.getMinimumSteps();
+	}
+	
+	public static void printMap(List<String> input) {
+		StorageMatrixPart2 instance = create(input);
+		instance.print();
+	}
+	
+	private static final class Test {
+		public static void main(String[] args) {
+			printMap(input);
+		}
 	}
 }
 
