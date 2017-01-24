@@ -134,11 +134,11 @@ public class AirDuctMaze {
 		}
 	}
 	
-	static int shortestDistance(List<String> input) {
+	public static int shortestDistance(List<String> input) {
 		return shortestDistance(input, false);
 	}
 	
-	static int shortestDistance(List<String> input, boolean returnToStart) {
+	public static int shortestDistance(List<String> input, boolean returnToStart) {
 		AirDuctMaze instance = create(input);
 		instance.run();
 		Table<Character, Character, Integer> adjacencyTable = instance.getAdjacencyTable();
