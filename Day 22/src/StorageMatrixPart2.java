@@ -5,7 +5,6 @@ import com.google.common.collect.Table;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-import java.util.Queue;
 import java.util.stream.Collectors;
 
 /**
@@ -159,19 +158,22 @@ public class StorageMatrixPart2 {
 	//</editor-fold>
 	
 	private void run() {
-		Queue<Node> nodes = Node.initialNodes(diskTable);
+		LinkedList<Node> nodes = Node.initialNodes(diskTable);
 		Set<Integer> traversedNodes = new HashSet<>();
 		
-		while (!nodes.isEmpty()) {
-			Node current = nodes.poll();
-			if (!traversedNodes.add(current.heuristics()))
-				continue;
-			else if (current.isSolution()) {
-				minimumSteps = current.getSteps();
-				return;
-			} else {
-				nodes.addAll(current.nextNodes());
+		for (int steps = 1; nodes.size() != 0; steps++) {
+			System.out.printf("Depth: %d%nNodes: %d Traversed Nodes: %d%n%n", steps, nodes.size(), traversedNodes.size());
+			LinkedList<Node> nextNodes = new LinkedList<>();
+			for (Node node : nodes) {
+				if (node.isSolution()) {
+					minimumSteps = node.getSteps();
+					return;
+				} else {
+					nextNodes.addAll(node.nextNodes());
+				}
 			}
+			nextNodes.removeIf(node -> !traversedNodes.add(node.heuristics()));
+			nodes = nextNodes;
 		}
 	}
 	
