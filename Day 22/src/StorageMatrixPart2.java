@@ -17,6 +17,8 @@ public class StorageMatrixPart2 {
 	}
 	
 	private static final class Node {
+		private static boolean limitToTopTwoRow = false;
+		
 		private final Node parent;
 		private final Table<Integer, Integer, Disk> diskTable;
 		private final int steps;
@@ -28,6 +30,8 @@ public class StorageMatrixPart2 {
 		}
 		
 		private Node(Node parent, Table<Integer, Integer, Disk> diskTable, int steps, Point movingDisk, Point goalDisk) {
+			if (movingDisk.y == 0 && movingDisk.x == diskTable.rowKeySet().size() - 2)
+				limitToTopTwoRow = true;
 			this.parent = parent;
 			this.diskTable = diskTable;
 			this.steps = steps;
@@ -50,6 +54,9 @@ public class StorageMatrixPart2 {
 							new Point(x + 1, y))) {
 				Disk disk = diskTable.get(destinationPoint.x, destinationPoint.y);
 				if (disk == null || disk == Disk.UNMOVABLE)
+					continue;
+				
+				if (limitToTopTwoRow && destinationPoint.y > 2)
 					continue;
 				
 				boolean isGoalDisk = false;
