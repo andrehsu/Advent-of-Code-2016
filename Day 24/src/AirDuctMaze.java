@@ -61,7 +61,7 @@ public class AirDuctMaze {
 		}
 		
 		private static <T> Set<T> setOf(T... items) {
-			return new HashSet<T>(Arrays.asList(items));
+			return new HashSet<>(Arrays.asList(items));
 		}
 	}
 	
@@ -117,8 +117,9 @@ public class AirDuctMaze {
 					for (int depth = 0; !nodes.isEmpty(); depth++) {
 						LinkedList<Node> next_nodes = new LinkedList<>();
 						for (Node node : nodes) {
+							//noinspection StatementWithEmptyBody
 							if (!traversedPoints.add(node.getCurrentPoint())) {
-								continue;
+								// pass
 							} else if (node.isSolution()) {
 								adjacencyTable.put(from, to, node.getSteps());
 								break depth;
