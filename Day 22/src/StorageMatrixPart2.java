@@ -29,7 +29,7 @@ public class StorageMatrixPart2 {
 		}
 		
 		private Node(Node parent, Table<Integer, Integer, Disk> diskTable, int steps, Point movingDisk, Point goalDisk) {
-			if (movingDisk.y == 0 && movingDisk.x == diskTable.rowKeySet().size() - 2)
+			if (movingDisk.y == 0)
 				limitToTopTwoRow = true;
 			this.parent = parent;
 			this.diskTable = diskTable;
@@ -39,7 +39,7 @@ public class StorageMatrixPart2 {
 		}
 		
 		boolean isSolution() {
-			return diskTable.get(0, 0) == Disk.GOAL;
+			return goalDisk.x == goalDisk.y && goalDisk.x == 0;
 		}
 		
 		LinkedList<Node> nextNodes() {
@@ -55,7 +55,7 @@ public class StorageMatrixPart2 {
 				if (disk == null || disk == Disk.UNMOVABLE)
 					continue;
 				
-				if (limitToTopTwoRow && destinationPoint.y > 2)
+				if (limitToTopTwoRow && destinationPoint.y > 1)
 					continue;
 				
 				boolean isGoalDisk = false;
@@ -73,10 +73,10 @@ public class StorageMatrixPart2 {
 		
 		int heuristics() {
 			int heuristic = 0;
-			heuristic = heuristic * 31 + movingDisk.x;
-			heuristic = heuristic * 31 + movingDisk.y;
-			heuristic = heuristic * 31 + goalDisk.x;
-			heuristic = heuristic * 31 + goalDisk.y;
+			heuristic = heuristic * 61 + movingDisk.x;
+			heuristic = heuristic * 61 + movingDisk.y;
+			heuristic = heuristic * 61 + goalDisk.x;
+			heuristic = heuristic * 61 + goalDisk.y;
 			return heuristic;
 		}
 		
@@ -182,16 +182,16 @@ public class StorageMatrixPart2 {
 			for (int x = 0; x < diskTable.column(y).size(); x++) {
 				switch (diskTable.get(x, y)) {
 					case UNMOVABLE:
-						System.out.print("# ");
+						System.out.print("#");
 						break;
 					case MOVABLE:
-						System.out.print(". ");
+						System.out.print(".");
 						break;
 					case EMPTY:
-						System.out.print("_ ");
+						System.out.print("E");
 						break;
 					case GOAL:
-						System.out.print("G ");
+						System.out.print("G");
 						break;
 				}
 			}
