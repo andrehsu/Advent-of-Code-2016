@@ -71,13 +71,8 @@ public class StorageMatrixPart2 {
 			return nextNodes;
 		}
 		
-		int heuristics() {
-			int heuristic = 0;
-			heuristic = heuristic * 61 + movingDisk.x;
-			heuristic = heuristic * 61 + movingDisk.y;
-			heuristic = heuristic * 61 + goalDisk.x;
-			heuristic = heuristic * 61 + goalDisk.y;
-			return heuristic;
+		List<Integer> ID() {
+			return Arrays.asList(movingDisk.x, movingDisk.y, goalDisk.x, goalDisk.y);
 		}
 		
 		static LinkedList<Node> initialNodes(Table<Integer, Integer, Disk> diskTable) {
@@ -159,7 +154,7 @@ public class StorageMatrixPart2 {
 	
 	private void run() {
 		LinkedList<Node> nodes = Node.initialNodes(diskTable);
-		Set<Integer> traversedNodes = new HashSet<>();
+		Set<List<Integer>> traversedNodes = new HashSet<>();
 		
 		for (int steps = 1; nodes.size() != 0; steps++) {
 			System.out.printf("Depth: %d%nNodes: %d Traversed Nodes: %d%n%n", steps, nodes.size(), traversedNodes.size());
@@ -172,7 +167,7 @@ public class StorageMatrixPart2 {
 					nextNodes.addAll(node.nextNodes());
 				}
 			}
-			nextNodes.removeIf(node -> !traversedNodes.add(node.heuristics()));
+			nextNodes.removeIf(node -> !traversedNodes.add(node.ID()));
 			nodes = nextNodes;
 		}
 	}
