@@ -52,6 +52,10 @@ public class ClockSignal {
 					output(tokens);
 					if (output.length() == firstNOutput)
 						return output.toString();
+					else if (output.length() == 2) {
+						if (!output.substring(0, 2).equals("01"))
+							return "Invalid";
+					}
 					break;
 			}
 		}
