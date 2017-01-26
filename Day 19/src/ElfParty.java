@@ -1,9 +1,5 @@
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Stack;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * Created by Andre on 1/6/2017.
@@ -19,9 +15,7 @@ public class ElfParty {
 	}
 	
 	public static int lastElfMethod2(int positions) {
-		if (positions < 1) return -1;
-		
-		
+		// kinda stole it from reddit
 		Deque<Integer> left = new LinkedList<>(),
 				right = new LinkedList<>();
 		for (int i = 1; i <= positions; i++) {
@@ -45,11 +39,33 @@ public class ElfParty {
 		return left.size() == 1 ? left.pollFirst() : right.pollFirst();
 	}
 	
-	private static final class Test {
-		public static void main(String[] args) {
-			System.out.println(lastElfMethod1(5));
-			System.out.println(lastElfMethod2(5));
+	public static int lastElfMethod2SlowImple(int positions) {
+		LinkedList<Integer> elves = new LinkedList<>();
+		for (int i = 1; i <= positions; i++) {
+			elves.addLast(i);
 		}
+		
+		while (elves.size() > 1) {
+			elves.remove(elves.size() / 2);
+			elves.addLast(elves.removeFirst());
+		}
+		
+		return elves.remove();
+	}
+	
+	public static int lastElfMethod2MathImple(int positions) {
+		int closetPowerOfThree = (int) Math.pow(3, (int) (Math.log(positions) / Math.log(3)));
+		
+		int index = closetPowerOfThree;
+		int lastElf = 1;
+		while (++index < positions) {
+			if (lastElf < closetPowerOfThree)
+				lastElf++;
+			else
+				lastElf += 2;
+		}
+		
+		return lastElf;
 	}
 }
 
@@ -70,5 +86,19 @@ class RunDay19_Part1 {
 class RunDay19_Part2 {
 	public static void main(String[] args) {
 		System.out.println(ElfParty.lastElfMethod2(ElfParty.input));
+	}
+}
+
+class RunDay19_Part2_MathImple {
+	public static void main(String... args) {
+		System.out.println(ElfParty.lastElfMethod2MathImple(ElfParty.input));
+	}
+}
+
+class GenTable {
+	public static void main(String... args) {
+		for (int i = 1; i <= 500; i++) {
+			System.out.printf("%4d: %d%n", i, ElfParty.lastElfMethod2SlowImple(i));
+		}
 	}
 }
