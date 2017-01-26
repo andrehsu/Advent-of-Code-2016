@@ -1,3 +1,4 @@
+import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -12,6 +13,19 @@ public class ElfParty {
 		
 		String binary = Integer.toBinaryString(positions);
 		return Integer.parseInt(binary.substring(1) + binary.charAt(0), 2);
+	}
+	
+	public static int lastElfMethod1_MyImple(int positions) {
+		Deque<Integer> elves = new ArrayDeque<>(positions);
+		for (int i = 1; i <= positions; i++) elves.addLast(i);
+		
+		elves.addLast(elves.removeFirst());
+		while (elves.size() > 1) {
+			elves.removeFirst();
+			elves.addLast(elves.removeFirst());
+		}
+		
+		return elves.remove();
 	}
 	
 	public static int lastElfMethod2(int positions) {
@@ -39,7 +53,7 @@ public class ElfParty {
 		return left.size() == 1 ? left.pollFirst() : right.pollFirst();
 	}
 	
-	public static int lastElfMethod2SlowImple(int positions) {
+	public static int lastElfMethod2_SlowImple(int positions) {
 		LinkedList<Integer> elves = new LinkedList<>();
 		for (int i = 1; i <= positions; i++) {
 			elves.addLast(i);
@@ -53,7 +67,7 @@ public class ElfParty {
 		return elves.remove();
 	}
 	
-	public static int lastElfMethod2MathImple(int positions) {
+	public static int lastElfMethod2_MathImple(int positions) {
 		int closetPowerOfThree = (int) Math.pow(3, (int) (Math.log(positions) / Math.log(3)));
 		
 		int index = closetPowerOfThree;
@@ -75,6 +89,12 @@ class RunDay19_Part1 {
 	}
 }
 
+class RunDay19_Part1_MyImple {
+	public static void main(String... args) {
+		System.out.println(ElfParty.lastElfMethod1_MyImple(ElfParty.input));
+	}
+}
+
 class RunDay19_Part2 {
 	public static void main(String[] args) {
 		System.out.println(ElfParty.lastElfMethod2(ElfParty.input));
@@ -83,14 +103,14 @@ class RunDay19_Part2 {
 
 class RunDay19_Part2_MathImple {
 	public static void main(String... args) {
-		System.out.println(ElfParty.lastElfMethod2MathImple(ElfParty.input));
+		System.out.println(ElfParty.lastElfMethod2_MathImple(ElfParty.input));
 	}
 }
 
 class GenTable {
 	public static void main(String... args) {
 		for (int i = 1; i <= 500; i++) {
-			System.out.printf("%4d: %d%n", i, ElfParty.lastElfMethod2SlowImple(i));
+			System.out.printf("%4d: %d%n", i, ElfParty.lastElfMethod2_SlowImple(i));
 		}
 	}
 }
