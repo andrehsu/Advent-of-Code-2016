@@ -1,11 +1,8 @@
 import andre.adventofcode.input.Input;
 
-import java.math.BigInteger;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static java.math.BigInteger.valueOf;
 
 /**
  * Created by Andre on 1/15/2017.
@@ -133,25 +130,21 @@ public class ChipsAndGenerators {
 			return output;
 		}
 		
-		BigInteger heuristicCode() {
-			final BigInteger PRIME = valueOf(13);
-			BigInteger heuristic = valueOf(elevatorFloor);
-			
-			for (Set<Item> floor : layout) {
-				int generatorCount = 0,
-						microchipCount = 0;
-				for (Item item : floor) {
-					if (item.isGenerator())
-						generatorCount++;
-					else if (item.isMicrochip())
-						microchipCount++;
+		String abstraction() {
+			StringBuilder output = new StringBuilder(elevatorFloor + "|");
+			for (Set<Item> items : layout) {
+				int generators = 0,
+						microchips = 0;
+				for (Item item : items) {
+					if (item.isMicrochip())
+						microchips++;
+					else
+						generators++;
 				}
-				
-				heuristic = heuristic.multiply(PRIME).add(valueOf(generatorCount))
-						.multiply(PRIME).add(valueOf(microchipCount));
+				output.append(microchips).append(' ')
+						.append(generators).append(' ');
 			}
-			
-			return heuristic;
+			return output.toString();
 		}
 		
 		void printMove() {
@@ -247,11 +240,11 @@ public class ChipsAndGenerators {
 	
 	private ChipsAndGenerators run() {
 		LinkedList<Node> nodes = Node.firstNode(initialLayout);
-		Set<BigInteger> heuristics = new HashSet<>();
+		Set<String> abstractions = new HashSet<>();
 		
 		for (int depth = 1; nodes.size() != 0; depth++) {
 			if (print)
-				System.out.printf("Depth %d: %d nodes%nTraversed nodes: %d%n%n", depth, nodes.size(), heuristics.size());
+				System.out.printf("Depth %d: %d nodes%nTraversed nodes: %d%n%n", depth, nodes.size(), abstractions.size());
 			
 			LinkedList<Node> nextNodes = new LinkedList<>();
 			for (Node node : nodes) {
@@ -264,7 +257,7 @@ public class ChipsAndGenerators {
 				}
 			}
 			// Remove if cannot add (already exists)
-			nextNodes.removeIf(next -> !heuristics.add(next.heuristicCode()));
+			nextNodes.removeIf(next -> !abstractions.add(next.abstraction()));
 			nodes = nextNodes;
 		}
 		
