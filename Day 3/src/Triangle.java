@@ -1,49 +1,64 @@
 import andre.adventofcode.input.Input;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Created by Andre on 12/5/2016.
  */
 public class Triangle {
-	public static void main(String[] args) {
-		List<String> file = Input.readAllLines("Day 3/input.txt");
-		
-		List<int[]> sets1 = new ArrayList<>();
-		for (String line : file) {
-			String[] setString = line.trim().split("\\s+");
-			int[] set = new int[3];
-			set[0] = Integer.parseInt(setString[0]);
-			set[1] = Integer.parseInt(setString[1]);
-			set[2] = Integer.parseInt(setString[2]);
-			sets1.add(set);
+	public static final List<String> input = Input.readAllLines("Day 3/input.txt");
+	
+	public static int countNumOfTriangle(List<String> input) {
+		Set<List<Integer>> triangles = input.stream()
+				.map(s -> Arrays.stream(s.trim().split("\\s+")).map(Integer::parseInt).collect(Collectors.toList()))
+				.collect(Collectors.toSet());
+		int count = 0;
+		for (List<Integer> triangle : triangles) {
+			if (isTriangle(triangle))
+				count++;
 		}
-		System.out.printf("1: %d%n", validateSets(sets1));
-		
-		List<int[]> sets2 = new ArrayList<>();
-		for (int i_line = 0; i_line < file.size(); i_line += 3) {
-			String[] line1 = file.get(i_line).trim().split("\\s+");
-			String[] line2 = file.get(i_line + 1).trim().split("\\s+");
-			String[] line3 = file.get(i_line + 2).trim().split("\\s+");
-			sets2.add(new int[]{Integer.parseInt(line1[0]), Integer.parseInt(line2[0]), Integer.parseInt(line3[0])});
-			sets2.add(new int[]{Integer.parseInt(line1[1]), Integer.parseInt(line2[1]), Integer.parseInt(line3[1])});
-			sets2.add(new int[]{Integer.parseInt(line1[2]), Integer.parseInt(line2[2]), Integer.parseInt(line3[2])});
-		}
-		System.out.printf("2: %d%n", validateSets(sets2));
+		return count;
 	}
 	
-	private static boolean validateTriangle(int side1, int side2, int side3) {
-		return side1 + side2 > side3 && side2 + side3 > side1 && side1 + side3 > side2;
-	}
-	
-	private static int validateSets(List<int[]> sets) {
-		int validTriangleCount = 0;
-		for (int[] set : sets) {
-			if (validateTriangle(set[0], set[1], set[2])) {
-				validTriangleCount++;
+	public static int countNumOfTriangleVertical(List<String> input) {
+		Set<List<Integer>> triangles = new HashSet<>(input.size());
+		Function<String, List<Integer>> strToInts = s -> Arrays.stream(s.trim().split("\\s+")).map(Integer::parseInt).collect(Collectors.toList());
+		for (int i = 0; i < input.size(); i += 3) {
+			List<Integer> l1 = strToInts.apply(input.get(i)),
+					l2 = strToInts.apply(input.get(i + 1)),
+					l3 = strToInts.apply(input.get(i + 2));
+			for (int j = 0; j < 3; j++) {
+				triangles.add(Arrays.asList(l1.get(j), l2.get(j), l3.get(j)));
 			}
 		}
-		return validTriangleCount;
+		int count = 0;
+		for (List<Integer> triangle : triangles) {
+			if (isTriangle(triangle))
+				count++;
+		}
+		return count;
+	}
+	
+	private static boolean isTriangle(List<Integer> sides) {
+		return sides.get(0) + sides.get(1) > sides.get(2) &&
+				sides.get(0) + sides.get(2) > sides.get(1) &&
+				sides.get(1) + sides.get(2) > sides.get(0);
+	}
+}
+
+class RunDay3Part1 {
+	public static void main(String... args) {
+		System.out.println(Triangle.countNumOfTriangle(Triangle.input));
+	}
+}
+
+class RunDay3Part2 {
+	public static void main(String... args) {
+		System.out.println(Triangle.countNumOfTriangleVertical(Triangle.input));
 	}
 }
