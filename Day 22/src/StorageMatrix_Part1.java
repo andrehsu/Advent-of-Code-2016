@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Andre on 1/8/2017.
  */
-public class StorageMatrixPart1 {
+public class StorageMatrix_Part1 {
 	private static final class Disk {
 		final int initialX,
 				initialY,
@@ -132,8 +132,8 @@ public class StorageMatrixPart1 {
 	}
 }
 
-class RunDay22Part1 {
+class RunDay22_Part1 {
 	public static void main(String[] args) {
-		System.out.println(StorageMatrixPart1.countViablePairs(StorageMatrixPart1.generateDiskTable(StorageMatrixPart1.input)));
+		System.out.println(StorageMatrix_Part1.countViablePairs(StorageMatrix_Part1.generateDiskTable(StorageMatrix_Part1.input)));
 	}
 }

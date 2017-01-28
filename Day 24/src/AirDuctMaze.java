@@ -182,19 +182,19 @@ public class AirDuctMaze {
 	}
 }
 
-class RunDay24Part1Test {
+class RunDay24_Part1_Test {
 	public static void main(String... args) {
 		System.out.println(AirDuctMaze.shortestDistance(AirDuctMaze.testInput));
 	}
 }
 
-class RunDay24Part1 {
+class RunDay24_Part1 {
 	public static void main(String... args) {
 		System.out.println(AirDuctMaze.shortestDistance(AirDuctMaze.input));
 	}
 }
 
-class RunDay24Part2 {
+class RunDay24_Part2 {
 	public static void main(String... args) {
 		System.out.println(AirDuctMaze.shortestDistance(AirDuctMaze.input, true));
 	}

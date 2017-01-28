@@ -118,14 +118,14 @@ public class Decompressor {
 	}
 }
 
-class RunDay9Part1 {
+class RunDay9_Part1 {
 	public static void main(String[] args) {
 		System.out.println(Decompressor.input.length());
 		System.out.println(Decompressor.decompress(Decompressor.input).length());
 	}
 }
 
-class RunDay9Part2 {
+class RunDay9_Part2 {
 	public static void main(String[] args) {
 		System.out.println(Decompressor.v2CountCharacters(Decompressor.input));
 	}

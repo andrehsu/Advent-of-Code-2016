@@ -75,7 +75,7 @@ public class AssembunnyInterpreter {
 	}
 }
 
-class RunDay12Part1 {
+class RunDay12_Part1 {
 	public static void main(String[] args) {
 		AssembunnyInterpreter interpreter = new AssembunnyInterpreter();
 		interpreter.runCode(AssembunnyInterpreter.input);
@@ -84,7 +84,7 @@ class RunDay12Part1 {
 	}
 }
 
-class RunDay12Part2 {
+class RunDay12_Part2 {
 	public static void main(String[] args){
 		AssembunnyInterpreter interpreter = new AssembunnyInterpreter(0,0,1,0);
 		interpreter.runCode(AssembunnyInterpreter.input);

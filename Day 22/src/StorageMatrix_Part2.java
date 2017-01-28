@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Andre on 1/19/2017.
  */
-public class StorageMatrixPart2 {
+public class StorageMatrix_Part2 {
 	private enum Disk {
 		UNMOVABLE, MOVABLE, EMPTY, GOAL
 	}
@@ -114,11 +114,11 @@ public class StorageMatrixPart2 {
 	}
 	
 	//<editor-fold desc="Constructors and factories">
-	private StorageMatrixPart2(Table<Integer, Integer, Disk> diskTable) {
+	private StorageMatrix_Part2(Table<Integer, Integer, Disk> diskTable) {
 		this.diskTable = diskTable;
 	}
 	
-	private static StorageMatrixPart2 create(List<String> input) {
+	private static StorageMatrix_Part2 create(List<String> input) {
 		List<List<Integer>> nodeTable = new ArrayList<>(input.size());
 		for (String s : input) {
 			if (!s.contains("/dev/grid")) continue;
@@ -148,7 +148,7 @@ public class StorageMatrixPart2 {
 		
 		diskTable.put(diskTable.rowKeySet().size() - 1, 0, Disk.GOAL);
 		
-		return new StorageMatrixPart2(diskTable);
+		return new StorageMatrix_Part2(diskTable);
 	}
 	//</editor-fold>
 	
@@ -195,13 +195,13 @@ public class StorageMatrixPart2 {
 	}
 	
 	public static int minimumSteps(List<String> input) {
-		StorageMatrixPart2 instance = create(input);
+		StorageMatrix_Part2 instance = create(input);
 		instance.run();
 		return instance.getMinimumSteps();
 	}
 	
 	public static void printMap(List<String> input) {
-		StorageMatrixPart2 instance = create(input);
+		StorageMatrix_Part2 instance = create(input);
 		instance.print();
 	}
 	
@@ -212,14 +212,14 @@ public class StorageMatrixPart2 {
 	}
 }
 
-class RunDay22Part2Test {
+class RunDay22_Part2_TestCase {
 	public static void main(String[] args) {
-		System.out.println(StorageMatrixPart2.minimumSteps(StorageMatrixPart2.testInput));
+		System.out.println(StorageMatrix_Part2.minimumSteps(StorageMatrix_Part2.testInput));
 	}
 }
 
-class RunDay22Part2 {
+class RunDay22_Part2 {
 	public static void main(String[] args) {
-		System.out.println(StorageMatrixPart2.minimumSteps(StorageMatrixPart2.input));
+		System.out.println(StorageMatrix_Part2.minimumSteps(StorageMatrix_Part2.input));
 	}
 }

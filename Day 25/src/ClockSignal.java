@@ -129,7 +129,7 @@ public class ClockSignal {
 	}
 }
 
-class RunDay25Part1 {
+class RunDay25_Part1 {
 	public static void main(String... args) {
 		System.out.println(ClockSignal.lowestInitializer(ClockSignal.input));
 	}

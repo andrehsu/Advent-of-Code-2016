@@ -123,7 +123,7 @@ class Bot {
 	}
 }
 
-class RunDay10Part1 {
+class RunDay10_Part1 {
 	public static void main(String[] args) {
 		BotFactory botFactory = new BotFactory(BotFactory.input);
 		
@@ -133,7 +133,7 @@ class RunDay10Part1 {
 	}
 }
 
-class RunDay10Part2 {
+class RunDay10_Part2 {
 	public static void main(String[] args) {
 		BotFactory botFactory = new BotFactory(BotFactory.input);
 		

@@ -269,19 +269,19 @@ public class ChipsAndGenerators {
 	}
 }
 
-class RunDay11TestCase {
+class RunDay11_TestCase {
 	public static void main(String[] args) {
 		System.out.println(ChipsAndGenerators.calculateMinimumSteps(ChipsAndGenerators.testInput));
 	}
 }
 
-class RunDay11Part1 {
+class RunDay11_Part1 {
 	public static void main(String[] args) {
 		System.out.println(ChipsAndGenerators.calculateMinimumSteps(ChipsAndGenerators.input));
 	}
 }
 
-class RunDay11Part2 {
+class RunDay11_Part2 {
 	public static void main(String[] args) {
 		System.out.println(ChipsAndGenerators.calculateMinimumSteps(ChipsAndGenerators.input2));
 	}
