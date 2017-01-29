@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 public class DecoyData {
 	public static final List<String> input = Input.readAllLines("Day 4/input.txt");
 	
-	static String matchKey(List<String> input, String match) {
+	public static String matchKey(List<String> input, String match) {
 		for (String key : input) {
 			String[] keySplit = splitKey(key);
 			String unencryptedName = decryptName(keySplit[0], Integer.parseInt(keySplit[1]));
