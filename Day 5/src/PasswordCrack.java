@@ -45,7 +45,6 @@ public class PasswordCrack {
 		System.out.println("Calculating...");
 		
 		char[] password = "________".toCharArray();
-		boolean[] foundDigit = new boolean[8];
 		
 		int salt = 0;
 		int remainingDigits = 8;
@@ -54,19 +53,18 @@ public class PasswordCrack {
 			String hash = DatatypeConverter.printHexBinary(MD5.digest((doorID + salt).getBytes()));
 			
 			if (hash.substring(0, 5).contains("00000")) {
-				int key = Character.digit(hash.charAt(5), 10);
-				if (key > 7 || key == -1) {
-					continue;
-				}
-				
-				if (!foundDigit[key]) {
-					foundDigit[key] = true;
-					password[key] = Character.toLowerCase(hash.charAt(6));
-					remainingDigits--;
-					for (char c : password) {
-						System.out.printf("%s ", c);
+				char charAt = hash.charAt(5);
+				if (charAt <= '7') {
+					int key = Character.digit(charAt, 10);
+					
+					if (password[key] == '_') {
+						password[key] = Character.toLowerCase(hash.charAt(6));
+						remainingDigits--;
+						for (char c : password) {
+							System.out.printf("%s ", c);
+						}
+						System.out.println();
 					}
-					System.out.println();
 				}
 			}
 		}
