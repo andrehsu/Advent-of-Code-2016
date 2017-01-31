@@ -14,7 +14,7 @@ public class PasswordCrack {
 		try {
 			MD5 = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
+			throw new ExceptionInInitializerError(e);
 		}
 	}
 	
