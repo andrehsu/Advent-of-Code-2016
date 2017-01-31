@@ -75,7 +75,10 @@ public class PasswordCrack {
 
 class RunDay5_Part1 {
 	public static void main(String[] args) {
+		long start = System.currentTimeMillis();
 		System.out.println(PasswordCrack.findPassword(PasswordCrack.input));
+		// ~4.5 seconds
+		System.out.println(System.currentTimeMillis() - start + " ms");
 	}
 }
 
