@@ -26,7 +26,13 @@ public class PasswordCrackMultithreaded {
 			IntStream.range(seed, seed += 10_000)
 					.parallel()
 					.mapToObj(value -> hexHashOf(prefix + value))
-					.filter(s -> s.substring(0, 5).equals("00000"))
+					.filter(s -> {
+						for (char c : s.substring(0, 5).toCharArray()) {
+							if (c != '0')
+								return false;
+						}
+						return true;
+					})
 					.map(s -> String.valueOf(s.charAt(5)))
 					.forEachOrdered(password::append);
 		}
