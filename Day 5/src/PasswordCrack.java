@@ -52,7 +52,7 @@ public class PasswordCrack {
 		while (remainingDigits > 0 && ++salt < Integer.MAX_VALUE) {
 			String hash = DatatypeConverter.printHexBinary(MD5.digest((doorID + salt).getBytes()));
 			
-			if (hash.substring(0, 5).contains("00000")) {
+			if (hash.substring(0, 5).equals("00000")) {
 				char charAt = hash.charAt(5);
 				if (charAt <= '7') {
 					int key = Character.digit(charAt, 10);
@@ -61,7 +61,7 @@ public class PasswordCrack {
 						password[key] = Character.toLowerCase(hash.charAt(6));
 						remainingDigits--;
 						for (char c : password) {
-							System.out.printf("%s ", c);
+							System.out.print(c + " ");
 						}
 						System.out.println();
 					}
@@ -84,6 +84,8 @@ class RunDay5_Part1 {
 
 class RunDay5_Part2 {
 	public static void main(String[] args) {
+		long start = System.currentTimeMillis();
 		System.out.println(PasswordCrack.findPassword2(PasswordCrack.input));
+		System.out.println(System.currentTimeMillis() - start + " ms");
 	}
 }
