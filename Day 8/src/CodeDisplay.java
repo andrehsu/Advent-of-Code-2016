@@ -1,3 +1,5 @@
+import andre.adventofcode.input.Input;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -5,7 +7,7 @@ import java.util.List;
  * Created by andre on 12/8/2016.
  */
 public class CodeDisplay {
-	public static final String inputURL = "Day 8/input.txt";
+	public static final List<String> input = Input.readAllLines("Day 8/input.txt");
 	
 	private static final boolean ON = true, OFF = false;
 	
@@ -32,28 +34,24 @@ public class CodeDisplay {
 	
 	public void doInstructions(List<String> instructions) {
 		for (String instruction : instructions) {
-			doInstruction(instruction);
-		}
-	}
-	
-	private void doInstruction(String instruction) {
-		String[] tokens = instruction.trim().split("\\s+");
-		
-		if (tokens[0].equals("rect")) {
-			String[] dimensions_string = tokens[1].split("x");
-			lightUpperLeftPixels(Integer.parseInt(dimensions_string[1]), Integer.parseInt(dimensions_string[0]));
-		} else if (tokens[1].equals("row")) {
-			rotateRow(Integer.parseInt(tokens[2].split("=")[1]), Integer.parseInt(tokens[4]));
-		} else {
-			rotateColumn(Integer.parseInt(tokens[2].split("=")[1]), Integer.parseInt(tokens[4]));
-		}
-		
-		// For the tampered thing
+			String[] tokens = instruction.trim().split("\\s+");
+			
+			if (tokens[0].equals("rect")) {
+				String[] dimensions_string = tokens[1].split("x");
+				lightUpperLeftPixels(Integer.parseInt(dimensions_string[1]), Integer.parseInt(dimensions_string[0]));
+			} else if (tokens[1].equals("row")) {
+				rotateRow(Integer.parseInt(tokens[2].split("=")[1]), Integer.parseInt(tokens[4]));
+			} else {
+				rotateColumn(Integer.parseInt(tokens[2].split("=")[1]), Integer.parseInt(tokens[4]));
+			}
+			
+			// For the tampered thing
 //		if (instruction.equals("rect 2x1"))
 //			display.get(0).set(0, OFF);
-		
-		System.out.println(instruction);
-		printDisplay();
+
+//			System.out.println(instruction);
+//			printDisplay();
+		}
 	}
 	
 	public int litPixels() {
@@ -117,34 +115,20 @@ public class CodeDisplay {
 		}
 		System.out.println();
 	}
-	
-	private static class Part1Test {
-		public static void main(String[] args) {
-			String instruction1 = "rect 6x4";
-			String instruction2 = "rotate row y=0 by 55";
-			String instruction3 = "rotate column x=5 by 1";
-			
-			CodeDisplay display = new CodeDisplay();
-			
-			display.printDisplay();
-			
-			display.doInstruction(instruction1);
-			
-			display.printDisplay();
-			
-			display.doInstruction(instruction2);
-			
-			display.printDisplay();
-			
-			display.doInstruction(instruction3);
-			
-			display.printDisplay();
-		}
+}
+
+class RunDay8_Part1 {
+	public static void main(String[] args) {
+		CodeDisplay codeDisplay = new CodeDisplay();
+		codeDisplay.doInstructions(CodeDisplay.input);
+		System.out.println(codeDisplay.litPixels());
 	}
-	
-	private static class Part2Test {
-		public static void main(String[] args) {
-			
-		}
+}
+
+class RunDay8_Part2 {
+	public static void main(String[] args) {
+		CodeDisplay codeDisplay = new CodeDisplay();
+		codeDisplay.doInstructions(CodeDisplay.input);
+		codeDisplay.printDisplay();
 	}
 }
