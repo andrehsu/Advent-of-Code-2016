@@ -5,7 +5,9 @@
     <option name="CUSTOM_SCOPE_NAME" value="Current File" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="24c09d15-530d-4f91-abe4-378c40e44190" name="Default" comment="add more concise solution" />
+    <list default="true" id="24c09d15-530d-4f91-abe4-378c40e44190" name="Default" comment="add more concise solution">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <ignored path="C:\Users\Andre\OneDrive\IdeaProjects\Advent of Code 2016\.idea\shelf/" />
@@ -55,7 +57,7 @@
       <file leaf-file-name="Day1Simpler.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Day 1/src/Day1Simpler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1542">
+            <state relative-caret-position="390">
               <caret line="65" column="16" lean-forward="false" selection-start-line="65" selection-start-column="16" selection-end-line="65" selection-end-column="16" />
               <folding />
             </state>
@@ -925,9 +927,9 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1579,7 +1581,8 @@
       <workItem from="1487516037462" duration="824000" />
       <workItem from="1488728085314" duration="77000" />
       <workItem from="1492518318856" duration="543000" />
-      <workItem from="1494133572783" duration="18000" />
+      <workItem from="1494133572783" duration="271000" />
+      <workItem from="1494145768898" duration="10000" />
     </task>
     <task id="LOCAL-00100" summary="changes is pair method">
       <created>1484571211567</created>
@@ -1928,7 +1931,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="237111000" />
+    <option name="totallyTimeSpent" value="237374000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1952,7 +1955,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31675547" sideWeight="0.49519232" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32918888" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24828297" sideWeight="0.49792776" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25171703" sideWeight="0.49792776" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2345467" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -2328,7 +2331,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Day 1/src/Day1Simpler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1542">
+        <state relative-caret-position="390">
           <caret line="65" column="16" lean-forward="false" selection-start-line="65" selection-start-column="16" selection-end-line="65" selection-end-column="16" />
           <folding />
         </state>
