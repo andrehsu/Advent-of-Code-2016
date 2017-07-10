@@ -5,10 +5,7 @@
     <option name="CUSTOM_SCOPE_NAME" value="Current File" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="24c09d15-530d-4f91-abe4-378c40e44190" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="24c09d15-530d-4f91-abe4-378c40e44190" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <ignored path="C:\Users\Andre\OneDrive\IdeaProjects\Advent of Code 2016\.idea\shelf/" />
@@ -79,8 +76,8 @@
       <file leaf-file-name="Node Size 3.txt" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Day 11 (Works only on my input)/optimizations node size/Node Size 3.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="858">
-              <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+            <state relative-caret-position="660">
+              <caret line="20" column="0" lean-forward="true" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -1594,14 +1591,7 @@
       <workItem from="1492518318856" duration="543000" />
       <workItem from="1494133572783" duration="271000" />
       <workItem from="1494145768898" duration="10000" />
-      <workItem from="1499684884866" duration="135000" />
-    </task>
-    <task id="LOCAL-00100" summary="changes is pair method">
-      <created>1484571211567</created>
-      <option name="number" value="00100" />
-      <option name="presentableId" value="LOCAL-00100" />
-      <option name="project" value="LOCAL" />
-      <updated>1484571211567</updated>
+      <workItem from="1499684884866" duration="201000" />
     </task>
     <task id="LOCAL-00101" summary="small touchups">
       <created>1484572437989</created>
@@ -1939,11 +1929,18 @@
       <option name="project" value="LOCAL" />
       <updated>1488728156215</updated>
     </task>
-    <option name="localTasksCounter" value="149" />
+    <task id="LOCAL-00149" summary="add more entries to .gitignore">
+      <created>1499685022971</created>
+      <option name="number" value="00149" />
+      <option name="presentableId" value="LOCAL-00149" />
+      <option name="project" value="LOCAL" />
+      <updated>1499685022973</updated>
+    </task>
+    <option name="localTasksCounter" value="150" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="237509000" />
+    <option name="totallyTimeSpent" value="237575000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1956,6 +1953,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-13" y="-13" width="3026" height="1946" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32386026" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -2363,8 +2361,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Day 11 (Works only on my input)/optimizations node size/Node Size 3.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="858">
-          <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+        <state relative-caret-position="660">
+          <caret line="20" column="0" lean-forward="true" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
           <folding />
         </state>
       </provider>
