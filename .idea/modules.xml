@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Advent of Code 2016.iml" filepath="$PROJECT_DIR$/Advent of Code 2016.iml" />
       <module fileurl="file://$PROJECT_DIR$/Day 1/Day 1.iml" filepath="$PROJECT_DIR$/Day 1/Day 1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Kotlin/Day 1 - Kotlin/Day 1 - Kotlin.iml" filepath="$PROJECT_DIR$/Kotlin/Day 1 - Kotlin/Day 1 - Kotlin.iml" />
       <module fileurl="file://$PROJECT_DIR$/Day 10/Day 10.iml" filepath="$PROJECT_DIR$/Day 10/Day 10.iml" />
       <module fileurl="file://$PROJECT_DIR$/Day 11/Day 11.iml" filepath="$PROJECT_DIR$/Day 11/Day 11.iml" />
       <module fileurl="file://$PROJECT_DIR$/Day 11 (Works only on my input)/Day 11 (Works only on my input).iml" filepath="$PROJECT_DIR$/Day 11 (Works only on my input)/Day 11 (Works only on my input).iml" />
@@ -16,6 +17,7 @@
       <module fileurl="file://$PROJECT_DIR$/Day 18/Day 18.iml" filepath="$PROJECT_DIR$/Day 18/Day 18.iml" />
       <module fileurl="file://$PROJECT_DIR$/Day 19/Day 19.iml" filepath="$PROJECT_DIR$/Day 19/Day 19.iml" />
       <module fileurl="file://$PROJECT_DIR$/Day 2/Day 2.iml" filepath="$PROJECT_DIR$/Day 2/Day 2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Kotlin/Day 2 - Kotlin/Day 2 - Kotlin.iml" filepath="$PROJECT_DIR$/Kotlin/Day 2 - Kotlin/Day 2 - Kotlin.iml" />
       <module fileurl="file://$PROJECT_DIR$/Day 20/Day 20.iml" filepath="$PROJECT_DIR$/Day 20/Day 20.iml" />
       <module fileurl="file://$PROJECT_DIR$/Day 21/Day 21.iml" filepath="$PROJECT_DIR$/Day 21/Day 21.iml" />
       <module fileurl="file://$PROJECT_DIR$/Day 22/Day 22.iml" filepath="$PROJECT_DIR$/Day 22/Day 22.iml" />
@@ -23,12 +25,18 @@
       <module fileurl="file://$PROJECT_DIR$/Day 24/Day 24.iml" filepath="$PROJECT_DIR$/Day 24/Day 24.iml" />
       <module fileurl="file://$PROJECT_DIR$/Day 25/Day 25.iml" filepath="$PROJECT_DIR$/Day 25/Day 25.iml" />
       <module fileurl="file://$PROJECT_DIR$/Day 3/Day 3.iml" filepath="$PROJECT_DIR$/Day 3/Day 3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Kotlin/Day 3 - Kotlin/Day 3 - Kotlin.iml" filepath="$PROJECT_DIR$/Kotlin/Day 3 - Kotlin/Day 3 - Kotlin.iml" />
       <module fileurl="file://$PROJECT_DIR$/Day 4/Day 4.iml" filepath="$PROJECT_DIR$/Day 4/Day 4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Kotlin/Day 4 - Kotlin/Day 4 - Kotlin.iml" filepath="$PROJECT_DIR$/Kotlin/Day 4 - Kotlin/Day 4 - Kotlin.iml" />
       <module fileurl="file://$PROJECT_DIR$/Day 5/Day 5.iml" filepath="$PROJECT_DIR$/Day 5/Day 5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Kotlin/Day 5 - Kotlin/Day 5 - Kotlin.iml" filepath="$PROJECT_DIR$/Kotlin/Day 5 - Kotlin/Day 5 - Kotlin.iml" />
       <module fileurl="file://$PROJECT_DIR$/Day 6/Day 6.iml" filepath="$PROJECT_DIR$/Day 6/Day 6.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Kotlin/Day 6 - Kotlin/Day 6 - Kotlin.iml" filepath="$PROJECT_DIR$/Kotlin/Day 6 - Kotlin/Day 6 - Kotlin.iml" />
       <module fileurl="file://$PROJECT_DIR$/Day 7/Day 7.iml" filepath="$PROJECT_DIR$/Day 7/Day 7.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Kotlin/Day 7 - Kotlin/Day 7 - Kotlin.iml" filepath="$PROJECT_DIR$/Kotlin/Day 7 - Kotlin/Day 7 - Kotlin.iml" />
       <module fileurl="file://$PROJECT_DIR$/Day 8/Day 8.iml" filepath="$PROJECT_DIR$/Day 8/Day 8.iml" />
       <module fileurl="file://$PROJECT_DIR$/Day 9/Day 9.iml" filepath="$PROJECT_DIR$/Day 9/Day 9.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Kotlin/Kotlin.iml" filepath="$PROJECT_DIR$/Kotlin/Kotlin.iml" />
     </modules>
   </component>
 </project>
